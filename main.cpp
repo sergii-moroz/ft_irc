@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 20:58:59 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/22 09:33:15 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/01/24 20:01:37 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ int	main(int argc, char **argv)
 	}
 
 	Server	server;
+
+	signal(SIGINT, Server::signalHandler);
+	signal(SIGQUIT, Server::signalHandler);
 
 	std::cout << "---- SERVER ----" << std::endl;
 	try

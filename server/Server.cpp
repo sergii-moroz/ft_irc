@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/21 09:26:18 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/01/24 20:06:24 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // Constructors
 // ==========================================
 
-Server::Server() : _port(PORT), _pass(PASS), _listen_sd(-1)
+Server::Server() : _port(PORT), _pass(PASS), _listen_sd(-1), _timeout(15 * 1000)
 {
 	std::cout << "Server: Default constructor called" << std::endl;
 }
@@ -27,7 +27,7 @@ Server::Server(Server const & copy)
 	*this = copy;
 }
 
-Server::Server(int port, std::string & pass) : _port(port), _pass(pass), _listen_sd(-1)
+Server::Server(int port, std::string & pass) : _port(port), _pass(pass), _listen_sd(-1), _timeout(15 * 1000)
 {
 	std::cout << "Server: Custom constructor called" << std::endl;
 }
@@ -114,12 +114,12 @@ void	Server::run()
 {
 	int	rc;
 
-	while (true)
+	while (Server::_forever)
 	{
 		try
 		{
-			rc = poll(_fds.data(), _fds.size(), 15 * 1000);
-			if (rc < 0)
+			rc = poll(_fds.data(), _fds.size(), _timeout);
+			if (rc < 0 && Server::_forever)
 				throw(std::runtime_error("ERROR: poll failed"));
 			if (rc == 0)
 				throw(std::runtime_error("INFO: [timestamp] Waiting..."));
@@ -142,8 +142,6 @@ void	Server::run()
 		{
 			std::cerr << e.what() << std::endl;
 		}
-
-
 	}
 }
 
@@ -188,8 +186,11 @@ void	Server::receiveData(int sd)
 	else
 	{
 		std::cout << "INFO: Client [" << sd << "] " << rc << " bytes received" << std::endl;
-		// std::cout << rc << "bytes received" << std::endl;
+
+		// Currently just print message
 		std::cout << buffer << std::endl;
+		// TODO:
+		// ---> Parse and process message here <---
 	}
 }
 
@@ -210,14 +211,23 @@ void	Server::closeAllSockets(void)
 {
 	for (int i=0; i<_fds.size(); ++i)
 	{
-		std::cout << "INFO: Client ["<< _fds[i].fd << "] disconnected" << std::endl;
+		std::cout << "INFO: Socket id: ["<< _fds[i].fd << "] disconnected" << std::endl;
 		close(_fds[i].fd);
 	}
 }
 
 // ==========================================
-// Static
+// Static vars / functions
 // ==========================================
+
+bool Server::_forever = true;
+
+void	Server::signalHandler(int signum)
+{
+	(void)signum;
+	std::cout << "WARNING: SIGINT signal received!" << std::endl;
+	Server::_forever = false;
+}
 
 void	Server::usage(void)
 {
