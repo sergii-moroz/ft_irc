@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/24 19:06:42 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/01/21 09:26:18 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,12 +128,35 @@ void	Server::run()
 				throw std::runtime_error("ERROR: Unexpected revents!");
 			else
 			{
-				// if (it->fd == _listen_sd)
-				// 	acceptClient();
+				if (it->fd == _listen_sd)
+					acceptClient();
 				// else
 				// 	receiveData(it->fd);
 			}
 		}
+	}
+}
+
+void	Server::acceptClient(void)
+{
+	struct pollfd		connection;
+	struct sockaddr_in6	conn_addr;
+	char				str[INET6_ADDRSTRLEN];
+	socklen_t			addrlen = sizeof(conn_addr);
+
+	std::cout << "INFO: Listening socket is readable" << std::endl;
+	connection.fd = accept(_listen_sd, (struct sockaddr *)&conn_addr, &addrlen);
+	if (connection.fd < 0)
+		throw std::runtime_error("ERROR: accept new connection failed!");
+	else
+	{
+		connection.events = POLLIN;
+		connection.revents = 0;
+
+		_fds.push_back(connection);
+		std::cout << "Client with socket descriptor [" << connection.fd << "] connected" << std::endl;
+		if (inet_ntop(AF_INET6, &conn_addr.sin6_addr, str, sizeof(str)))
+			std::cout << "INFO: Client: " << str << ":" << ntohs(conn_addr.sin6_port) << std::endl;
 	}
 }
 
