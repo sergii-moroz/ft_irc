@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/24 20:09:44 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/01/24 20:32:05 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ class Server
 		void		run(void);
 
 	private:
-
+		void		handlePollIn(size_t i);
+		void		handlePollHup(size_t & i);
+		void		handlePollErr(size_t & i);
 		void		acceptClient(void);
 		void		receiveData(int sd);
 		void		clearClient(int sd);

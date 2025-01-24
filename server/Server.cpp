@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/24 20:27:51 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/01/24 20:35:46 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,38 +118,24 @@ void	Server::run()
 	{
 		try
 		{
+			// Waiting for events
 			rc = poll(_fds.data(), _fds.size(), _timeout);
 			if (rc < 0 && Server::_forever)
 				throw(std::runtime_error("ERROR: poll failed"));
 			if (rc == 0)
 				throw(std::runtime_error("INFO: [timestamp] Waiting..."));
-			for (int i=0; i < _fds.size(); ++i)
+
+			// Process events
+			for (size_t i=0; i<_fds.size(); ++i)
 			{
 				if (_fds[i].revents == 0)
 					continue;
 				if (_fds[i].revents & POLLIN)
-				{
-					if (_fds[i].fd == _listen_sd)
-						acceptClient();
-					else
-						receiveData(_fds[i].fd);
-				}
+					handlePollIn(i);
 				else if (_fds[i].revents & POLLHUP)
-				{
-					// handlePollHangUp()
-					std::cerr << "INFO: Client disconnected. Socket " << _fds[i].fd << std::endl;
-					close(_fds[i].fd); // Close the socket
-					_fds.erase(_fds.begin() + i); // Remove from poll list
-					--i; // Adjust index after erasing
-				}
+					handlePollHup(i);
 				else if (_fds[i].revents & POLLERR)
-				{
-					// handlePollErr()
-					std::cerr << "ERROR: Socket error on descriptor " << _fds[i].fd << std::endl;
-					close(_fds[i].fd); // Close the socket
-					_fds.erase(_fds.begin() + i); // Remove from poll list
-					--i; // Adjust index after erasing
-				}
+					handlePollErr(i);
 				else
 					throw std::runtime_error("ERROR: Unexpected revents!");
 			}
@@ -159,6 +145,37 @@ void	Server::run()
 			std::cerr << e.what() << std::endl;
 		}
 	}
+}
+
+// ==========================================
+// Event handlers
+// ==========================================
+
+void	Server::handlePollIn(size_t i)
+{
+	std::cout << "DEBUG: POLLIN event on socket " << _fds[i].fd  << std::endl;
+	if (_fds[i].fd == _listen_sd)
+		acceptClient();				// A new client is connecting
+	else
+		receiveData(_fds[i].fd);	// An existing client has sent data
+}
+
+void	Server::handlePollHup(size_t & i)
+{
+	std::cout << "DEBUG: POLLHUP event on socket " << _fds[i].fd << std::endl;
+	std::cerr << "INFO: Client disconnected. Socket " << _fds[i].fd << std::endl;
+	close(_fds[i].fd); 				// Close the socket
+	_fds.erase(_fds.begin() + i);	// Remove from poll list
+	--i;							// Adjust index after erasing
+}
+
+void	Server::handlePollErr(size_t & i)
+{
+	std::cout << "DEBUG: POLLERR event on socket " << _fds[i].fd << std::endl;
+	std::cerr << "ERROR: Socket error on descriptor " << _fds[i].fd << std::endl;
+	close(_fds[i].fd); 				// Close the socket
+	_fds.erase(_fds.begin() + i);	// Remove from poll list
+	--i;							// Adjust index after erasing
 }
 
 void	Server::acceptClient(void)
