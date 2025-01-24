@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/24 20:06:24 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/01/24 20:27:51 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,15 +127,31 @@ void	Server::run()
 			{
 				if (_fds[i].revents == 0)
 					continue;
-				else if (_fds[i].revents != POLLIN)
-					throw std::runtime_error("ERROR: Unexpected revents!");
-				else
+				if (_fds[i].revents & POLLIN)
 				{
 					if (_fds[i].fd == _listen_sd)
 						acceptClient();
 					else
 						receiveData(_fds[i].fd);
 				}
+				else if (_fds[i].revents & POLLHUP)
+				{
+					// handlePollHangUp()
+					std::cerr << "INFO: Client disconnected. Socket " << _fds[i].fd << std::endl;
+					close(_fds[i].fd); // Close the socket
+					_fds.erase(_fds.begin() + i); // Remove from poll list
+					--i; // Adjust index after erasing
+				}
+				else if (_fds[i].revents & POLLERR)
+				{
+					// handlePollErr()
+					std::cerr << "ERROR: Socket error on descriptor " << _fds[i].fd << std::endl;
+					close(_fds[i].fd); // Close the socket
+					_fds.erase(_fds.begin() + i); // Remove from poll list
+					--i; // Adjust index after erasing
+				}
+				else
+					throw std::runtime_error("ERROR: Unexpected revents!");
 			}
 		}
 		catch(std::exception const & e)
@@ -194,7 +210,7 @@ void	Server::receiveData(int sd)
 	}
 }
 
-void	Server::clearClient(int sd)
+void	Server::clearClient(int sd) // Rename to removeFromPool()
 {
 	for (int i=0; i<_fds.size(); ++i)
 	{
@@ -233,3 +249,5 @@ void	Server::usage(void)
 {
 	std::cout << "example: ./ircserv <port> <password>" << std::endl;
 }
+
+// What if _listen_sd closed unexpected?
