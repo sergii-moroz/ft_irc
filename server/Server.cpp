@@ -39,6 +39,7 @@ Server::Server(int port, std::string & pass) : _port(port), _pass(pass), _listen
 Server::~Server()
 {
 	std::cout << "Server: Destructor called" << std::endl;
+	closeAllSockets();
 }
 
 // ==========================================
@@ -112,28 +113,37 @@ void	Server::init(void)
 void	Server::run()
 {
 	int	rc;
+
 	while (true)
 	{
-		std::cout << "INFO: [timestamp] Waiting..." << std::endl;
-		rc = poll(&_fds[0], _fds.size(), 5 * 1000);
-		if (rc < 0)
-			throw(std::runtime_error("ERROR: poll failed"));
-		if (rc == 0)
-			continue; // timeout
-		for (std::vector<struct pollfd>::iterator it=_fds.begin(); it != _fds.end(); ++it)
+		try
 		{
-			if (it->revents == 0)
-				continue;
-			else if (it->revents != POLLIN)
-				throw std::runtime_error("ERROR: Unexpected revents!");
-			else
+			rc = poll(_fds.data(), _fds.size(), 15 * 1000);
+			if (rc < 0)
+				throw(std::runtime_error("ERROR: poll failed"));
+			if (rc == 0)
+				throw(std::runtime_error("INFO: [timestamp] Waiting..."));
+			for (int i=0; i < _fds.size(); ++i)
 			{
-				if (it->fd == _listen_sd)
-					acceptClient();
-				// else
-				// 	receiveData(it->fd);
+				if (_fds[i].revents == 0)
+					continue;
+				else if (_fds[i].revents != POLLIN)
+					throw std::runtime_error("ERROR: Unexpected revents!");
+				else
+				{
+					if (_fds[i].fd == _listen_sd)
+						acceptClient();
+					else
+						receiveData(_fds[i].fd);
+				}
 			}
 		}
+		catch(std::exception const & e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
+
+
 	}
 }
 
@@ -157,6 +167,51 @@ void	Server::acceptClient(void)
 		std::cout << "Client with socket descriptor [" << connection.fd << "] connected" << std::endl;
 		if (inet_ntop(AF_INET6, &conn_addr.sin6_addr, str, sizeof(str)))
 			std::cout << "INFO: Client: " << str << ":" << ntohs(conn_addr.sin6_port) << std::endl;
+	}
+}
+
+void	Server::receiveData(int sd)
+{
+	int		rc;
+	char	buffer[1024];
+
+	memset(buffer, 0, sizeof(buffer));
+	std::cout << "INFO: Existing descriptor " << sd << " is readable" << std::endl;
+	rc = recv(sd, buffer, sizeof(buffer) - 1, 0);
+	if (rc < 0)
+		throw std::runtime_error("ERROR: recv() faild");
+	else if (rc == 0)
+	{
+		std::cout << "INFO: Connection was closed by client. Socket " << sd << std::endl;
+		clearClient(sd);
+	}
+	else
+	{
+		std::cout << "INFO: Client [" << sd << "] " << rc << " bytes received" << std::endl;
+		// std::cout << rc << "bytes received" << std::endl;
+		std::cout << buffer << std::endl;
+	}
+}
+
+void	Server::clearClient(int sd)
+{
+	for (int i=0; i<_fds.size(); ++i)
+	{
+		if (_fds[i].fd == sd)
+		{
+			_fds.erase(_fds.begin() + i);
+			break;
+		}
+	}
+	close(sd);
+}
+
+void	Server::closeAllSockets(void)
+{
+	for (int i=0; i<_fds.size(); ++i)
+	{
+		std::cout << "INFO: Client ["<< _fds[i].fd << "] disconnected" << std::endl;
+		close(_fds[i].fd);
 	}
 }
 

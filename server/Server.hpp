@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/24 19:25:27 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/01/21 09:24:27 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <sys/types.h>
 # include <arpa/inet.h>
 # include <iostream>
+# include <unistd.h>
 # include <fcntl.h>
 # include <poll.h>
 # include <string>
@@ -42,6 +43,9 @@ class Server
 		void		init(void);
 		void		run(void);
 		void		acceptClient(void);
+		void		receiveData(int sd);
+		void		clearClient(int sd);
+		void		closeAllSockets(void);
 
 	private:
 		int							_listen_sd;
