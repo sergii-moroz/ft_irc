@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/24 17:17:29 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/01/24 19:06:42 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,34 @@ void	Server::init(void)
 	pl.revents = 0;
 
 	_fds.push_back(pl);
+}
+
+void	Server::run()
+{
+	int	rc;
+	while (true)
+	{
+		std::cout << "INFO: [timestamp] Waiting..." << std::endl;
+		rc = poll(&_fds[0], _fds.size(), 5 * 1000);
+		if (rc < 0)
+			throw(std::runtime_error("ERROR: poll failed"));
+		if (rc == 0)
+			continue; // timeout
+		for (std::vector<struct pollfd>::iterator it=_fds.begin(); it != _fds.end(); ++it)
+		{
+			if (it->revents == 0)
+				continue;
+			else if (it->revents != POLLIN)
+				throw std::runtime_error("ERROR: Unexpected revents!");
+			else
+			{
+				// if (it->fd == _listen_sd)
+				// 	acceptClient();
+				// else
+				// 	receiveData(it->fd);
+			}
+		}
+	}
 }
 
 // ==========================================

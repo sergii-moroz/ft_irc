@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/21 09:24:27 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/01/24 18:05:51 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ class Server
 		std::string	getPass(void) const;
 
 		void		init(void);
+		void		run(void);
 
 	private:
 		int							_listen_sd;
