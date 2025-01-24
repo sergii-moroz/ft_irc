@@ -38,4 +38,7 @@ int	main(int argc, char **argv)
 		std::cerr << e.what() << std::endl;
 	}
 	std::cout << "The Server Closed!" << std::endl;
+	(void)argc;
+	(void)argv;
+	return (0);
 }

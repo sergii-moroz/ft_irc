@@ -16,7 +16,7 @@
 // Constructors
 // ==========================================
 
-Server::Server() : _port(PORT), _pass(PASS), _listen_sd(-1), _timeout(15 * 1000)
+Server::Server() : _listen_sd(-1), _timeout(15 * 1000), _port(PORT), _pass(PASS)
 {
 	std::cout << "Server: Default constructor called" << std::endl;
 }
@@ -27,7 +27,7 @@ Server::Server(Server const & copy)
 	*this = copy;
 }
 
-Server::Server(int port, std::string & pass) : _port(port), _pass(pass), _listen_sd(-1), _timeout(15 * 1000)
+Server::Server(int port, std::string & pass) : _listen_sd(-1), _timeout(15 * 1000), _port(port), _pass(pass)
 {
 	std::cout << "Server: Custom constructor called" << std::endl;
 }
@@ -229,7 +229,7 @@ void	Server::receiveData(int sd)
 
 void	Server::clearClient(int sd) // Rename to removeFromPool()
 {
-	for (int i=0; i<_fds.size(); ++i)
+	for (size_t i=0; i<_fds.size(); ++i)
 	{
 		if (_fds[i].fd == sd)
 		{
@@ -242,7 +242,7 @@ void	Server::clearClient(int sd) // Rename to removeFromPool()
 
 void	Server::closeAllSockets(void)
 {
-	for (int i=0; i<_fds.size(); ++i)
+	for (size_t i=0; i<_fds.size(); ++i)
 	{
 		std::cout << "INFO: Socket id: ["<< _fds[i].fd << "] disconnected" << std::endl;
 		close(_fds[i].fd);
