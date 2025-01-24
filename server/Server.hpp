@@ -13,8 +13,14 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+# include <sys/socket.h>
+# include <sys/types.h>
+# include <arpa/inet.h>
 # include <iostream>
+# include <fcntl.h>
+# include <poll.h>
 # include <string>
+# include <vector>
 
 # define PORT	12345
 # define PASS	"42Heilbronn"
@@ -28,12 +34,18 @@ class Server
 		Server(int port, std::string & pass);
 		Server &	operator=(Server const &);
 
+		static void	usage(void);
+
 		int			getPort(void) const;
 		std::string	getPass(void) const;
 
+		void		init(void);
+
 	private:
-		int			_port;
-		std::string	_pass;
+		int							_listen_sd;
+		int							_port;
+		std::string					_pass;
+		std::vector<struct pollfd>	_fds;
 };
 
 #endif
