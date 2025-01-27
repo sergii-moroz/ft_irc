@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 12:04:09 by smoreron          #+#    #+#             */
-/*   Updated: 2025/01/27 20:56:33 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/01/27 20:59:02 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -25,14 +25,12 @@ class User {
 		std::string	_realname;
 
 	public:
-		// Каноническая форма класса
-		User();						// Конструктор по умолчанию
-		User(const User &other);	// Конструктор копирования
-		User(int fd);				// Конструктор с параметром
-		~User();					// Деструктор
-		User &operator=(const User &other);	// Оператор присваивания
+		User();						
+		User(const User &other);
+		User(int fd);	
+		~User();
+		User &operator=(const User &other);	
 
-		// Геттеры
 		int		getFd() const;
 		bool	isRegistered() const;
 		bool	isPassOK() const;
@@ -40,7 +38,7 @@ class User {
 		const std::string &getUsername() const;
 		const std::string &getRealname() const;
 
-		// Сеттеры
+
 		void	setRegistered(bool val);
 		void	setPassOK(bool val);
 		void	setNickname(const std::string &nick);
@@ -48,4 +46,4 @@ class User {
 		void	setRealname(const std::string &real);
 };
 
-#endif // USER_HPP
+#endif

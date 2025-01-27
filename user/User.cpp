@@ -6,17 +6,13 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 12:11:32 by smoreron          #+#    #+#             */
-/*   Updated: 2025/01/27 20:56:48 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/01/27 20:59:40 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 
 #include "User.hpp"
  
-// User::User(int fd)
-// : _fd(fd), _registered(false), _passOK(false)
-// {}
-
 User::User() : _fd(-1), _registered(false), _passOK(false) {} 
 User::User(int fd) : _fd(fd), _registered(false), _passOK(false) {}
 
@@ -68,21 +64,16 @@ void User::setRealname(const std::string &real) {
 }
 #include "User.hpp"
 
-// Конструктор по умолчанию
 User::User() : _fd(-1), _registered(false), _passOK(false) {}
 
-// Конструктор с параметром
 User::User(int fd) : _fd(fd), _registered(false), _passOK(false) {}
 
-// Конструктор копирования
 User::User(const User &other) {
 	*this = other;
 }
 
-// Деструктор
 User::~User() {}
 
-// Оператор присваивания
 User &User::operator=(const User &other) {
 	if (this != &other) {
 		_fd = other._fd;
@@ -120,7 +111,6 @@ const std::string &User::getRealname() const {
 	return _realname;
 }
 
-// Сеттеры
 void User::setRegistered(bool val) {
 	_registered = val;
 }
