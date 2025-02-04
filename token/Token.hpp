@@ -6,7 +6,7 @@
 /*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:36:05 by olanokhi          #+#    #+#             */
-/*   Updated: 2025/02/04 22:51:02 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/04 23:30:06 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,39 @@
 # define TOKEN_HPP
 
 # include <iostream>
+# include <string>
+
+enum tokenType
+{
+	CR,
+	LF,
+	SPACE,
+	COLON,
+	DIGIT,
+	ALPHA,
+	UNDEFINED,
+	END
+};
 
 class Token
 {
 	public:
 		Token();
-		Token(const Token& other);
+		Token(tokenType, std::string);
+		Token(const Token &copy);
 		~Token();
-		Token& operator=(const Token& other);
+		Token & operator=(Token const &);
+
+		tokenType		getType() const;
+		std::string		getValue() const;
+		std::string		getTypeString() const;
+		
+		private:
+			tokenType	_type;
+			std::string	_value;
 };
+
+std::ostream & operator<<(std::ostream &, Token const &);
 
 #endif
 
