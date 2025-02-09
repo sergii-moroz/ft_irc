@@ -6,7 +6,7 @@
 /*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 17:07:13 by olanokhi          #+#    #+#             */
-/*   Updated: 2025/02/09 11:26:01 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/09 17:39:04 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,33 @@
 // Default constructor
 Token::Token()
 {
-	std::cout << "Token: Default constructor called" << std::endl;
+	// std::cout << "Token: Default constructor called" << std::endl;
 }
 
 // Custom constructor
 Token::Token(TokenType type, std::string value) : _type(type), _value(value)
 {
-	std::cout << "Token: Custom constructor called" << std::endl;
+	// std::cout << "Token: Custom constructor called" << std::endl;
 }
 
 // Copy constructor ?
 Token::Token(const Token& copy)
 {
-	std::cout << "Token: Copy constructor called" << std::endl;
+	// std::cout << "Token: Copy constructor called" << std::endl;
 	*this = copy;
 }
 
 // Destructor
 Token::~Token()
 {
-	std::cout << "Token: Destructor called" << std::endl;
+	// std::cout << "Token: Destructor called" << std::endl;
 }
 
 // Overloaded assignment operator
 Token & Token::operator=(Token const & rhs)
 {
 	if (this != &rhs) {
-		std::cout << "Token: Assignment operator=() called" << std::endl;
+		// std::cout << "Token: Assignment operator=() called" << std::endl;
 		this->_type = rhs.getType();
 		this->_value.assign(rhs.getValue());
 	}

@@ -6,7 +6,7 @@
 /*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 23:36:04 by olanokhi          #+#    #+#             */
-/*   Updated: 2025/02/09 16:51:46 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/09 17:33:58 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ class Lexer
 		std::string   letters(void);
 		std::string   threeDigits(void);
 		std::string   command(void);
+		bool          isspcrlfcl(void);
+		std::string   nospcrlfcl(void);
 
 	private:
 		Token         getTokenAt(std::string::iterator);

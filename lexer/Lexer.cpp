@@ -6,7 +6,7 @@
 /*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 23:36:14 by olanokhi          #+#    #+#             */
-/*   Updated: 2025/02/09 16:51:39 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/09 17:37:13 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,23 @@
 
 Lexer::Lexer()
 {
-	std::cout << "Lexer: Default constructor called" << std::endl;
+	// std::cout << "Lexer: Default constructor called" << std::endl;
 }
 
 Lexer::~Lexer()
 {
-	std::cout << "Lexer: Destructor called" << std::endl;
+	// std::cout << "Lexer: Destructor called" << std::endl;
 }
 
 Lexer::Lexer(std::string text) : _text(text), _it(_text.begin())
 {
-	std::cout << "Lexer: Custom constructor called" << std::endl;
+	// std::cout << "Lexer: Custom constructor called" << std::endl;
 	getNextToken();
 }
 
 Lexer::Lexer(Lexer const & copy)
 {
-	std::cout << "Lexer: Copy constructor called" << std::endl;
+	// std::cout << "Lexer: Copy constructor called" << std::endl;
 	*this = copy;
 }
 
@@ -38,7 +38,7 @@ Lexer & Lexer::operator=(Lexer const & rhs)
 {
 	if (this != &rhs)
 	{
-		std::cout << "Lexer: Assignment operator=() called" << std::endl;
+		// std::cout << "Lexer: Assignment operator=() called" << std::endl;
 		setText(rhs.getText());
 	}
 	return (*this);
@@ -57,7 +57,7 @@ void	Lexer::setText(std::string text)
 
 Token	Lexer::getTokenAt(std::string::iterator it)
 {
-	std::cout << "Lexer: getTokenAt() called" << std::endl;
+	// std::cout << "Lexer: getTokenAt() called" << std::endl;
 	if (it >= _text.end())
 		return (Token(END, ""));
 	if (*it == '\r')
@@ -82,7 +82,7 @@ const Token &Lexer::getCurrentToken() const
 
 void Lexer::getNextToken()
 {
-	std::cout << "Lexer: getNextToken() called" << std::endl;
+	// std::cout << "Lexer: getNextToken() called" << std::endl;
 	if (_it != _text.end())
 	{
 		_currentToken = getTokenAt(_it);
@@ -109,14 +109,14 @@ void	Lexer::eat(TokenType type)
 
 void	Lexer::crlf(void)
 {
-	std::cout << "Lexer: crlf() called" << std::endl;
+	// std::cout << "Lexer: crlf() called" << std::endl;
 	eat(CR);
 	eat(LF);
 }
 
 void	Lexer::spaces(void)
 {
-	std::cout << "Lexer: spaces() called" << std::endl;
+	// std::cout << "Lexer: spaces() called" << std::endl;
 	eat(SPACE);
 	while (_currentToken.getType() == SPACE)
 		eat(SPACE);
@@ -158,4 +158,25 @@ std::string Lexer::command(void)
 		return (threeDigits());
 	else
 		throw std::runtime_error("ERROR: Lexer: Wrong syntax at command rule!");
+}
+
+bool Lexer::isspcrlfcl(void)
+{
+	TokenType	t = _currentToken.getType();
+
+	if (t == SPACE || t == CR || t == LF || t == COLON)
+		return (true);
+	return (false);
+}
+
+std::string Lexer::nospcrlfcl(void)
+{
+	std::string s;
+
+	while (!isspcrlfcl())
+	{
+		s += _currentToken.getValue();
+		eat(_currentToken.getType());
+	}
+	return (s);
 }
