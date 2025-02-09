@@ -6,7 +6,7 @@
 /*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:36:05 by olanokhi          #+#    #+#             */
-/*   Updated: 2025/02/09 11:02:12 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/09 11:26:01 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <string>
 # include <array>
 
-enum tokenType
+enum TokenType
 {
 	CR,
 	LF,
@@ -27,23 +27,23 @@ enum tokenType
 	ALPHA,
 	UNDEFINED,
 	END
-};
+};;
 
 class Token
 {
 	public:
 		Token();
-		Token(tokenType, std::string);
+		Token(TokenType, std::string);
 		Token(const Token &copy);
 		~Token();
 		Token & operator=(Token const &);
 
-		tokenType		getType() const;
+		TokenType		getType() const;
 		std::string		getValue() const;
 		std::string		getTypeString() const;
 		
 	private:
-		tokenType	_type;
+		TokenType	_type;
 		std::string	_value;
 };
 

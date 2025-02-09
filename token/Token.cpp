@@ -6,7 +6,7 @@
 /*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 17:07:13 by olanokhi          #+#    #+#             */
-/*   Updated: 2025/02/09 11:01:54 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/09 11:26:01 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Token::Token()
 }
 
 // Custom constructor
-Token::Token(tokenType type, std::string value) : _type(type), _value(value)
+Token::Token(TokenType type, std::string value) : _type(type), _value(value)
 {
 	std::cout << "Token: Custom constructor called" << std::endl;
 }
@@ -53,7 +53,7 @@ std::string Token::getValue() const
 	return this->_value;
 }
 
-tokenType Token::getType() const
+TokenType Token::getType() const
 {
 	return this->_type;
 }
