@@ -6,7 +6,7 @@
 /*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 23:36:04 by olanokhi          #+#    #+#             */
-/*   Updated: 2025/02/09 11:37:27 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/09 16:51:46 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,15 @@ class Lexer
 		std::string   getText() const;
 		void          setText(std::string);
 		void          getNextToken();
-		const Token &getCurrentToken() const;
+		const Token  &getCurrentToken() const;
 		TokenType     peekTokenType();
-		
-		
+		void          eat(TokenType type);
+		void          crlf(void);
+		void          spaces(void);
+		std::string   letters(void);
+		std::string   threeDigits(void);
+		std::string   command(void);
+
 	private:
 		Token         getTokenAt(std::string::iterator);
 		
