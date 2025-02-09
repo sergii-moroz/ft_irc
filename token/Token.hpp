@@ -6,7 +6,7 @@
 /*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:36:05 by olanokhi          #+#    #+#             */
-/*   Updated: 2025/02/04 23:30:06 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/09 11:02:12 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <iostream>
 # include <string>
+# include <array>
 
 enum tokenType
 {
@@ -41,9 +42,9 @@ class Token
 		std::string		getValue() const;
 		std::string		getTypeString() const;
 		
-		private:
-			tokenType	_type;
-			std::string	_value;
+	private:
+		tokenType	_type;
+		std::string	_value;
 };
 
 std::ostream & operator<<(std::ostream &, Token const &);

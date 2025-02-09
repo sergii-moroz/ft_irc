@@ -6,7 +6,7 @@
 /*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 17:07:13 by olanokhi          #+#    #+#             */
-/*   Updated: 2025/02/04 23:32:08 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/09 11:01:54 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,14 @@ tokenType Token::getType() const
 
 std::string Token::getTypeString() const
 {
-	const char *typeStrings[] = {
-		"CR",
-		"LF",
-		"SPACE",
-		"COLON",
-		"DIGIT",
-		"ALPHA",
-		"UNDEFINED",
-		"END"
-	};
-	if (this->_type >= sizeof(typeStrings) / sizeof(typeStrings[0]))
+	static const std::array<std::string, 8> v = {"CR", "LF", "SPACE", "COLON", "DIGIT", "ALPHA", "UNDEFINED", "EOF"};
+	
+	if (_type >= v.size() || _type < 0)
 	{
-		std::cout << "ERROR: Invalid token type!" << std::endl;
-		return "UNKNOWN";
+		std::cerr << "ERROR: Invalid token type!" << std::endl;
+		return "UNKNOWN"; // Return a default string if out of bounds
 	}
-	return typeStrings[this->_type];
+	return v[_type];
 }
 
 std::ostream & operator<<(std::ostream & out, Token const & t)
