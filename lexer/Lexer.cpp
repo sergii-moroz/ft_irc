@@ -6,7 +6,7 @@
 /*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 23:36:14 by olanokhi          #+#    #+#             */
-/*   Updated: 2025/02/09 17:37:13 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/10 15:28:03 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ void	Lexer::spaces(void)
 
 std::string Lexer::letters(void)
 {
+	// std::cout << "Lexer: letters() called" << std::endl;
 	std::string s;
 	while (_currentToken.getType() == ALPHA)
 	{
@@ -135,6 +136,7 @@ std::string Lexer::letters(void)
 
 std::string Lexer::threeDigits(void)
 {
+	// std::cout << "Lexer: threeDigits() called" << std::endl;
 	std::string s;
 	for (int i = 0; i < 3; i++)
 	{
@@ -151,6 +153,7 @@ std::string Lexer::threeDigits(void)
 
 std::string Lexer::command(void)
 {
+	// std::cout << "Lexer: command() called" << std::endl;
 	std::string s;
 	if (_currentToken.getType() == ALPHA)
 		return (letters());
@@ -164,7 +167,7 @@ bool Lexer::isspcrlfcl(void)
 {
 	TokenType	t = _currentToken.getType();
 
-	if (t == SPACE || t == CR || t == LF || t == COLON)
+	if (t == SPACE || t == CR || t == LF || t == COLON || t == END)
 		return (true);
 	return (false);
 }
@@ -179,4 +182,91 @@ std::string Lexer::nospcrlfcl(void)
 		eat(_currentToken.getType());
 	}
 	return (s);
+}
+
+std::vector<std::string>	Lexer::middle(void)
+{
+	std::vector<std::string>	v;
+	std::string                 s;
+
+	s += nospcrlfcl();
+	v.push_back(s);
+	s.clear();
+
+	while (_currentToken.getType() == COLON || !isspcrlfcl())
+	{
+		if (_currentToken.getType() == COLON)
+			eat(_currentToken.getType());
+		else
+		{
+			s += nospcrlfcl();
+			v.push_back(s);
+			s.clear();
+		}
+	}
+	return (v);
+}
+
+std::string Lexer::trailing(void)
+{
+	std::string s;
+
+	// ":" / " " / nospcrlfcl means => not in [CR, LF, EOF]
+	while (_currentToken.getType() != CR &&
+			_currentToken.getType() != LF &&
+			_currentToken.getType() != END)
+	{
+		if (_currentToken.getType() == COLON)
+		{
+			s += ":"; // save all??? or skip first and save all other???
+			eat(COLON);
+		}
+		else if(_currentToken.getType() == SPACE)
+		{
+			s += " "; // replace many spaces with one.
+			spaces();
+		}
+		else
+			s += nospcrlfcl();
+	}
+	return (s);
+}
+
+std::vector<std::string>    Lexer::parameters(Command & cmd)
+{
+	std::vector<std::string>    v;
+
+	while (_currentToken.getType() == SPACE)
+	{
+		spaces();
+		if (!isspcrlfcl())
+			cmd.addParam(middle());
+		else if (_currentToken.getType() == COLON)
+		{
+			eat(COLON);
+			cmd.setTail(trailing());
+			break; 
+			// no need to break. Trailing should consume line till the end
+		}
+		else if (_currentToken.getType() == END)
+		{
+			break;
+		}
+		else
+		{
+			throw std::runtime_error("ERROR: Unexpected token in parameters");
+		}
+	}
+	return (v);
+}
+
+void    Lexer::message(void)
+{
+	Command cmd;
+
+	cmd.setName(command());
+	parameters(cmd);
+	crlf();
+
+	std::cout << cmd << std::endl; // for testing
 }
