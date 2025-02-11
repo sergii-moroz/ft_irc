@@ -10,39 +10,35 @@
 /*                                                                            */
 /******************************************************************************/
 
+#ifndef COMMAND_HPP
+# define COMMAND_HPP
 
-#ifndef COMMAND_HPP 
-#define COMMAND_HPP
-
-#include <iostream>
-#include <string>
-#include <vector>  
+# include <iostream>
+# include <string>
+# include <vector>
 
 class Command {
-private:
-	std::string _name;
-	std::string _tail;
-	std::vector<std::string> _parameters; 
+	public:
+		Command();
+		~Command();
+		Command(Command const &);
+		Command &				operator=(Command const &);
 
-public:
-	Command();
-	Command(const std::string &name);
-	Command(const std::string &name, const std::string &tail);
-	Command(const Command &other);
-	~Command();
-	Command &operator=(const Command &other);
+		std::string const &		getName() const;
+		std::string const &		getTail() const;
+		void					setName(std::string const &);
+		void					setTail(std::string const &);
+		void					addParam(std::vector<std::string> const &);
+		std::ostream &			printParams(std::ostream &) const;
+		std::vector< std::vector<std::string> > const &	getParameters() const;
 
-	const std::string &getName() const;
-	const std::string &getTail() const;
-	const std::vector<std::string> &getParameters() const; 
-
-	void setName(const std::string &name);
-	void setTail(const std::string &tail);
-
-	void addParam(const std::string &param); 
-void printParams() const;	   
+	private:
+		std::string								_name;
+		std::string								_tail;
+		std::vector< std::vector<std::string> >	_parameters;
 };
 
-std::ostream &operator<<(std::ostream &out, const Command &cmd);
+std::ostream &	operator<<(std::ostream & out, Command const & cmd);
+std::ostream &	operator<<(std::ostream & out, std::vector<std::string> const & v);
 
 #endif
