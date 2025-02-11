@@ -12,76 +12,105 @@
 
 #include "Command.hpp"
 
+// ==========================================
+// Constructors
+// ==========================================
+
 Command::Command() : _name(""), _tail("") {}
 
-Command::Command(const std::string &name) : _name(name), _tail("") {}
-
-Command::Command(const std::string &name, const std::string &tail) : _name(name), _tail(tail) {}
-
-Command::Command(const Command &other) {
+Command::Command(Command const & other)
+{
 	*this = other;
 }
-	
+
+// ==========================================
+// Destructor
+// ==========================================
+
 Command::~Command() {}
 
-Command &Command::operator=(const Command &other) {
-	if (this != &other) {
-		_name = other._name;
-		_tail = other._tail;
-		_parameters = other._parameters;
+// ==========================================
+// Assignment operator=()
+// ==========================================
+
+Command &	Command::operator=(Command const & other)
+{
+	if (this != &other)
+	{
+		_name = other.getName();
+		_tail = other.getTail();
+		_parameters = other.getParameters();
 	}
-	return *this;
+	return (*this);
 }
 
-const std::string &Command::getName() const {
-	return _name;
+// ==========================================
+// Getters / Setters
+// ==========================================
+
+std::string const &	Command::getName(void) const
+{
+	return (_name);
 }
 
-const std::string &Command::getTail() const {
-	return _tail;
+std::string const &	Command::getTail(void) const
+{
+	return (_tail);
 }
 
-const std::vector<std::string> &Command::getParameters() const {
-	return _parameters;
+std::vector< std::vector<std::string> > const &	Command::getParameters() const
+{
+	return (_parameters);
 }
 
-void Command::setName(const std::string &name) {
+void	Command::setName(std::string const & name)
+{
 	_name = name;
 }
 
-void Command::setTail(const std::string &tail) {
+void	Command::setTail(std::string const & tail)
+{
 	_tail = tail;
 }
 
-void Command::addParam(const std::string &param) {
+void	Command::addParam(std::vector<std::string> const & param)
+{
 	_parameters.push_back(param);
 }
 
-void Command::printParams() const {
-	if (_parameters.empty()) {
-		std::cout << "No parameters." << std::endl;
-		return;
-	}
-	std::cout << "Parameters:" << std::endl;
-	for (size_t i = 0; i < _parameters.size(); ++i) {
-		std::cout << " [" << i << "] " << _parameters[i] << std::endl;
-	}
+std::ostream &	Command::printParams(std::ostream & out) const
+{
+	for (size_t i=0; i<_parameters.size(); ++i)
+		out << std::string(6, ' ') << i << ": [ "
+			<< _parameters[i] << " ]" << std::endl;
+	return (out);
 }
 
-std::ostream &operator<<(std::ostream &out, const Command &cmd) {
-	out << "Command: " << cmd.getName();
-	if (!cmd.getTail().empty())
-		out << " | Tail: " << cmd.getTail();
+// ==========================================
+// Overload operator<<
+// ==========================================
 
-	const std::vector<std::string>& params = cmd.getParameters();
-	if (!params.empty()) {
-		out << " | Parameters: [";
-		for (size_t i = 0; i < params.size(); ++i) {
-			out << params[i];
-			if (i < params.size() - 1)
-				out << ", ";
-		}
-		out << "]";
+std::ostream &	operator<<(std::ostream & out, Command const & cmd)
+{
+	out << "Command:" << std::endl
+		<< "{" << std::endl
+		<< std::string(3, ' ') << "name: " << cmd.getName() << std::endl
+		<< std::string(3, ' ') << "parameters: " << std::endl
+		<< std::string(3, ' ') << "{" << std::endl;
+	cmd.printParams(out);
+	out << std::string(3, ' ') << "}" << std::endl
+		<< std::string(3, ' ') << "tail: " << cmd.getTail() << std::endl
+		<< "}" << std::endl;
+	return (out);
+}
+
+std::ostream &	operator<<(std::ostream & out, std::vector<std::string> const & v)
+{
+	for (size_t	i=0; i<v.size(); ++i)
+	{
+		out << v[i];
+		if (i < v.size()-1)
+			out << ", ";
 	}
-	return out;
+	return (out);
 }
