@@ -11,11 +11,33 @@
 /******************************************************************************/
 
 #ifndef USER_HPP
-#define USER_HPP
+# define USER_HPP
 
-#include <string>
+# include <string>
+# include <iostream>
 
-class User {
+class User
+{
+	public:
+		User();
+		User(User const &);
+		User(int fd);
+		~User();
+		User &		operator=(User const &);
+
+		int			getFd(void) const;
+		bool		isRegistered(void) const;
+		bool		isPassOK(void) const;
+		std::string const &	getNickname(void) const;
+		std::string const &	getUsername(void) const;
+		std::string const &	getRealname(void) const;
+
+		void		setRegistered(bool val);
+		void		setPassOK(bool val);
+		void		setNickname(std::string const &);
+		void		setUsername(std::string const &);
+		void		setRealname(std::string const &);
+
 	private:
 		int			_fd;
 		bool		_registered;
@@ -23,27 +45,8 @@ class User {
 		std::string	_nickname;
 		std::string	_username;
 		std::string	_realname;
-
-	public:
-		User();						
-		User(const User &other);
-		User(int fd);	
-		~User();
-		User &operator=(const User &other);	
-
-		int		getFd() const;
-		bool	isRegistered() const;
-		bool	isPassOK() const;
-		const std::string &getNickname() const;
-		const std::string &getUsername() const;
-		const std::string &getRealname() const;
-
-
-		void	setRegistered(bool val);
-		void	setPassOK(bool val);
-		void	setNickname(const std::string &nick);
-		void	setUsername(const std::string &user);
-		void	setRealname(const std::string &real);
 };
+
+std::ostream &	operator<<(std::ostream &, User const &);
 
 #endif

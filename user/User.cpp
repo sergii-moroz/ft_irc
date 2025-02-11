@@ -3,22 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 12:11:32 by smoreron          #+#    #+#             */
-/*   Updated: 2025/01/27 20:59:40 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:30:11 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "User.hpp"
 
-User::User() : _fd(-1), _registered(false), _passOK(false) {}
+User::User() : _fd(-1), _registered(false), _passOK(false),
+	_nickname(""), _username(""), _realname("") {}
 
-User::User(int fd) : _fd(fd), _registered(false), _passOK(false) {}
+User::User(int fd) : _fd(fd), _registered(false), _passOK(false),
+	_nickname(""), _username(""), _realname("") {}
 
-User::User(const User &other) {
+User::User(User const & other)
+{
 	*this = other;
 }
+
+// ==========================================
+// Destructor
+// ==========================================
 
 User::~User() {}
 
@@ -30,12 +37,12 @@ User &	User::operator=(User const & other)
 {
 	if (this != &other)
 	{
-		_fd = other._fd;
-		_registered = other._registered;
-		_passOK = other._passOK;
-		_nickname = other._nickname;
-		_username = other._username;
-		_realname = other._realname;
+		_fd = other.getFd();
+		_registered = other.isRegistered();
+		_passOK = other.isPassOK();
+		_nickname = other.getNickname();
+		_username = other.getUsername();
+		_realname = other.getRealname();
 	}
 	return (*this);
 }
@@ -97,4 +104,21 @@ void	User::setUsername(std::string const & user)
 void	User::setRealname(std::string const & real)
 {
 	_realname = real;
+}
+
+// ==========================================
+// Overload operator<<
+// ==========================================
+
+std::ostream &	operator<<(std::ostream & out, User const & ref)
+{
+	out << "User: { " << std::endl
+		<< std::string(3, ' ') << "nickname: " << ref.getNickname() << std::endl
+		<< std::string(3, ' ') << "username: " << ref.getUsername() << std::endl
+		<< std::string(3, ' ') << "realname: " << ref.getRealname() << std::endl
+		<< std::string(3, ' ') << "sock desc: " << ref.getFd() << std::endl
+		<< std::string(3, ' ') << "registered: " << ref.isRegistered() << std::endl
+		<< std::string(3, ' ') << "authenticated: " << ref.isPassOK() << std::endl
+		<< "}";
+	return (out);
 }
