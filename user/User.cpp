@@ -10,58 +10,6 @@
 /*                                                                            */
 /******************************************************************************/
 
-
-#include "User.hpp"
- 
-User::User() : _fd(-1), _registered(false), _passOK(false) {} 
-User::User(int fd) : _fd(fd), _registered(false), _passOK(false) {}
-
-
-User::~User() {}
-
-int User::getFd() const {
-	return _fd;
-}
-
-bool User::isRegistered() const {
-	return _registered;
-}
-
-void User::setRegistered(bool val) {
-	_registered = val;
-}
-
-bool User::isPassOK() const {
-	return _passOK;
-}
-
-void User::setPassOK(bool val) {
-	_passOK = val;
-}
-
-const std::string & User::getNickname() const {
-	return _nickname;
-}
-
-void User::setNickname(const std::string &nick) {
-	_nickname = nick;
-}
-
-const std::string & User::getUsername() const {
-	return _username;
-}
-
-void User::setUsername(const std::string &user) {
-	_username = user;
-}
-
-const std::string & User::getRealname() const {
-	return _realname;
-}
-
-void User::setRealname(const std::string &real) {
-	_realname = real;
-}
 #include "User.hpp"
 
 User::User() : _fd(-1), _registered(false), _passOK(false) {}
@@ -74,8 +22,14 @@ User::User(const User &other) {
 
 User::~User() {}
 
-User &User::operator=(const User &other) {
-	if (this != &other) {
+// ==========================================
+// Assignment operator=()
+// ==========================================
+
+User &	User::operator=(User const & other)
+{
+	if (this != &other)
+	{
 		_fd = other._fd;
 		_registered = other._registered;
 		_passOK = other._passOK;
@@ -83,50 +37,64 @@ User &User::operator=(const User &other) {
 		_username = other._username;
 		_realname = other._realname;
 	}
-	return *this;
+	return (*this);
 }
 
-// Геттеры
-int User::getFd() const {
-	return _fd;
+// ==========================================
+// Getters / Setters
+// ==========================================
+
+int	User::getFd(void) const
+{
+	return (_fd);
 }
 
-bool User::isRegistered() const {
-	return _registered;
+bool	User::isRegistered(void) const
+{
+	return (_registered);
 }
 
-bool User::isPassOK() const {
-	return _passOK;
+bool	User::isPassOK(void) const
+{
+	return (_passOK);
 }
 
-const std::string &User::getNickname() const {
-	return _nickname;
+std::string const &	User::getNickname(void) const
+{
+	return (_nickname);
 }
 
-const std::string &User::getUsername() const {
-	return _username;
+std::string const &	User::getUsername(void) const
+{
+	return (_username);
 }
 
-const std::string &User::getRealname() const {
-	return _realname;
+std::string const &	User::getRealname(void) const
+{
+	return (_realname);
 }
 
-void User::setRegistered(bool val) {
+void	User::setRegistered(bool val)
+{
 	_registered = val;
 }
 
-void User::setPassOK(bool val) {
+void	User::setPassOK(bool val)
+{
 	_passOK = val;
 }
 
-void User::setNickname(const std::string &nick) {
+void	User::setNickname(std::string const & nick)
+{
 	_nickname = nick;
 }
 
-void User::setUsername(const std::string &user) {
+void	User::setUsername(std::string const & user)
+{
 	_username = user;
 }
 
-void User::setRealname(const std::string &real) {
+void	User::setRealname(std::string const & real)
+{
 	_realname = real;
 }
