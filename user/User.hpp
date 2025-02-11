@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 12:04:09 by smoreron          #+#    #+#             */
-/*   Updated: 2025/01/27 20:59:02 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/11 18:49:17 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -31,12 +31,14 @@ class User
 		std::string const &	getNickname(void) const;
 		std::string const &	getUsername(void) const;
 		std::string const &	getRealname(void) const;
+		std::string	const & getBuffer(void) const;
 
 		void		setRegistered(bool val);
 		void		setPassOK(bool val);
 		void		setNickname(std::string const &);
 		void		setUsername(std::string const &);
 		void		setRealname(std::string const &);
+		void		addToBuffer(std::string const &);
 
 	private:
 		int			_fd;
@@ -45,6 +47,7 @@ class User
 		std::string	_nickname;
 		std::string	_username;
 		std::string	_realname;
+		std::string	_buffer;
 };
 
 std::ostream &	operator<<(std::ostream &, User const &);

@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 12:11:32 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/11 17:30:11 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/11 18:49:42 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -81,6 +81,11 @@ std::string const &	User::getRealname(void) const
 	return (_realname);
 }
 
+std::string const &	User::getBuffer(void) const
+{
+	return (_buffer);
+}
+
 void	User::setRegistered(bool val)
 {
 	_registered = val;
@@ -104,6 +109,11 @@ void	User::setUsername(std::string const & user)
 void	User::setRealname(std::string const & real)
 {
 	_realname = real;
+}
+
+void	User::addToBuffer(std::string const & msg)
+{
+	_buffer += msg;
 }
 
 // ==========================================

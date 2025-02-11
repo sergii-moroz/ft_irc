@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/24 20:35:46 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/11 18:10:03 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,8 @@ void	Server::acceptClient(void)
 		connection.revents = 0;
 
 		_fds.push_back(connection);
+		addNewUser(connection.fd);
+
 		std::cout << "Client with socket descriptor [" << connection.fd << "] connected" << std::endl;
 		if (inet_ntop(AF_INET6, &conn_addr.sin6_addr, str, sizeof(str)))
 			std::cout << "INFO: Client: " << str << ":" << ntohs(conn_addr.sin6_port) << std::endl;
@@ -221,9 +223,10 @@ void	Server::receiveData(int sd)
 		std::cout << "INFO: Client [" << sd << "] " << rc << " bytes received" << std::endl;
 
 		// Currently just print message
-		std::cout << buffer << std::endl;
 		// TODO:
 		// ---> Parse and process message here <---
+		_users[sd].addToBuffer(buffer);
+		std::cout << _users[sd].getBuffer() << std::endl;
 	}
 }
 
@@ -237,6 +240,11 @@ void	Server::clearClient(int sd) // Rename to removeFromPool()
 			break;
 		}
 	}
+
+	std::map<int, User>::iterator	it = _users.find(sd);
+	if (it != _users.end())
+		_users.erase(it);
+
 	close(sd);
 }
 
@@ -247,6 +255,11 @@ void	Server::closeAllSockets(void)
 		std::cout << "INFO: Socket id: ["<< _fds[i].fd << "] disconnected" << std::endl;
 		close(_fds[i].fd);
 	}
+}
+
+void	Server::addNewUser(int sd)
+{
+	_users[sd] = User(sd);
 }
 
 // ==========================================
