@@ -23,6 +23,10 @@
 # include <poll.h>
 # include <string>
 # include <vector>
+# include <map>
+
+# include <User.hpp>
+# include <Lexer.hpp>
 
 # define PORT	12345
 # define PASS	"42Heilbronn"
@@ -51,13 +55,17 @@ class Server
 		void		handlePollErr(size_t & i);
 		void		acceptClient(void);
 		void		receiveData(int sd);
+		void		processData(int sd);
+		void		sendData(int sd, std::string & data);
 		void		clearClient(int sd);
 		void		closeAllSockets(void);
+		void		addNewUser(int sd);
 
 		int							_listen_sd;
 		int							_timeout;
 		int							_port;
 		std::string					_pass;
+		std::map<int, User>			_users;
 		std::vector<struct pollfd>	_fds;
 		static bool					_forever;
 };

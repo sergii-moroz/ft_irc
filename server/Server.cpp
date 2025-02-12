@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/24 20:35:46 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/11 18:10:03 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,10 @@ void	Server::handlePollIn(size_t i)
 	if (_fds[i].fd == _listen_sd)
 		acceptClient();				// A new client is connecting
 	else
+	{
 		receiveData(_fds[i].fd);	// An existing client has sent data
+		processData(_fds[i].fd);	// Check if we have enough data to parse a command and execute
+	}
 }
 
 void	Server::handlePollHup(size_t & i)
@@ -195,6 +198,8 @@ void	Server::acceptClient(void)
 		connection.revents = 0;
 
 		_fds.push_back(connection);
+		addNewUser(connection.fd);
+
 		std::cout << "Client with socket descriptor [" << connection.fd << "] connected" << std::endl;
 		if (inet_ntop(AF_INET6, &conn_addr.sin6_addr, str, sizeof(str)))
 			std::cout << "INFO: Client: " << str << ":" << ntohs(conn_addr.sin6_port) << std::endl;
@@ -219,11 +224,56 @@ void	Server::receiveData(int sd)
 	else
 	{
 		std::cout << "INFO: Client [" << sd << "] " << rc << " bytes received" << std::endl;
+		_users[sd].addToBuffer(buffer);
 
-		// Currently just print message
-		std::cout << buffer << std::endl;
-		// TODO:
-		// ---> Parse and process message here <---
+		// DEBUG print message
+		for (int i=0; i<rc; i++)
+		{
+			if (buffer[i] == '\r')
+				std::cout << "\\r";
+			else if(buffer[i] == '\n')
+				std::cout << "\\n";
+			else
+				std::cout << buffer[i];
+		}
+		std::cout << std::endl;
+	}
+}
+
+void	Server::processData(int sd)
+{
+	std::string	data = _users[sd].getNextCommand();
+
+	while (!data.empty())
+	{
+		Command	cmd;
+		Lexer	lex(data);
+
+		cmd = lex.message();
+		std::cout << cmd << std::endl;
+
+		// --> execute cmd here <--
+		if (cmd.getName() == "CAP")
+		{
+			std::string	msg = ":server.name CAP client-nickname LS :\r\n";
+			sendData(sd, msg);
+		}
+		else if (cmd.getName() == "NICK")
+		{
+			std::vector< std::vector<std::string> >	p = cmd.getParameters();
+			_users[sd].setNickname(p[0][0]);
+			std::cout << "INFO: " << _users[sd] << std::endl;
+		}
+
+		data = _users[sd].getNextCommand();
+	}
+}
+
+void	Server::sendData(int sd, std::string & data)
+{
+	if (send(sd, data.c_str(), data.size(), 0) < 0)
+	{
+		std::cout << "ERROR: Send failed" << std::endl;
 	}
 }
 
@@ -237,6 +287,11 @@ void	Server::clearClient(int sd) // Rename to removeFromPool()
 			break;
 		}
 	}
+
+	std::map<int, User>::iterator	it = _users.find(sd);
+	if (it != _users.end())
+		_users.erase(it);
+
 	close(sd);
 }
 
@@ -247,6 +302,11 @@ void	Server::closeAllSockets(void)
 		std::cout << "INFO: Socket id: ["<< _fds[i].fd << "] disconnected" << std::endl;
 		close(_fds[i].fd);
 	}
+}
+
+void	Server::addNewUser(int sd)
+{
+	_users[sd] = User(sd);
 }
 
 // ==========================================

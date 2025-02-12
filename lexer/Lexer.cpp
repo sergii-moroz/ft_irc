@@ -245,7 +245,7 @@ std::vector<std::string>    Lexer::parameters(Command & cmd)
 		{
 			eat(COLON);
 			cmd.setTail(trailing());
-			break; 
+			break;
 			// no need to break. Trailing should consume line till the end
 		}
 		else if (_currentToken.getType() == END)
@@ -260,7 +260,7 @@ std::vector<std::string>    Lexer::parameters(Command & cmd)
 	return (v);
 }
 
-void    Lexer::message(void)
+Command	Lexer::message(void)
 {
 	Command cmd;
 
@@ -268,5 +268,5 @@ void    Lexer::message(void)
 	parameters(cmd);
 	crlf();
 
-	std::cout << cmd << std::endl; // for testing
+	return (cmd);
 }
