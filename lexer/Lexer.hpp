@@ -29,7 +29,7 @@ class Lexer
 		Lexer(Lexer const &);
 		Lexer(std::string);
 		Lexer & operator=(Lexer const &);
-		
+
 		std::string              getText() const;
 		void                     setText(std::string);
 		void                     getNextToken();
@@ -44,13 +44,13 @@ class Lexer
 		bool                     isspcrlfcl(void);
 		std::string              nospcrlfcl(void);
 		std::string              trailing(void);
-		void                     message(void);
+		Command						message(void);
 		std::vector<std::string> parameters(Command &cmd);
 		std::vector<std::string> middle(void);
 
 	private:
 		Token                    getTokenAt(std::string::iterator);
-		
+
 		std::string             _text;
 		std::string::iterator   _it;
 		Token                   _currentToken;

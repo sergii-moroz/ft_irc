@@ -157,7 +157,10 @@ void	Server::handlePollIn(size_t i)
 	if (_fds[i].fd == _listen_sd)
 		acceptClient();				// A new client is connecting
 	else
+	{
 		receiveData(_fds[i].fd);	// An existing client has sent data
+		processData(_fds[i].fd);	// Check if we have enough data to parse a command and execute
+	}
 }
 
 void	Server::handlePollHup(size_t & i)
@@ -221,10 +224,9 @@ void	Server::receiveData(int sd)
 	else
 	{
 		std::cout << "INFO: Client [" << sd << "] " << rc << " bytes received" << std::endl;
+		_users[sd].addToBuffer(buffer);
 
-		// Currently just print message
-		// TODO:
-		// ---> Parse and process message here <---
+		// DEBUG print message
 		for (int i=0; i<rc; i++)
 		{
 			if (buffer[i] == '\r')
@@ -235,10 +237,43 @@ void	Server::receiveData(int sd)
 				std::cout << buffer[i];
 		}
 		std::cout << std::endl;
-		_users[sd].addToBuffer(buffer);
-		std::string	data = _users[sd].getNextCommand();
+	}
+}
+
+void	Server::processData(int sd)
+{
+	std::string	data = _users[sd].getNextCommand();
+
+	while (!data.empty())
+	{
+		Command	cmd;
 		Lexer	lex(data);
-		lex.message();
+
+		cmd = lex.message();
+		std::cout << cmd << std::endl;
+
+		// --> execute cmd here <--
+		if (cmd.getName() == "CAP")
+		{
+			std::string	msg = ":server.name CAP client-nickname LS :\r\n";
+			sendData(sd, msg);
+		}
+		else if (cmd.getName() == "NICK")
+		{
+			std::vector< std::vector<std::string> >	p = cmd.getParameters();
+			_users[sd].setNickname(p[0][0]);
+			std::cout << "INFO: " << _users[sd] << std::endl;
+		}
+
+		data = _users[sd].getNextCommand();
+	}
+}
+
+void	Server::sendData(int sd, std::string & data)
+{
+	if (send(sd, data.c_str(), data.size(), 0) < 0)
+	{
+		std::cout << "ERROR: Send failed" << std::endl;
 	}
 }
 
