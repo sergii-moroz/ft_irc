@@ -15,7 +15,6 @@
 
 # include <iostream>
 # include <string>
-# include <array>
 
 enum TokenType
 {
@@ -41,7 +40,7 @@ class Token
 		TokenType		getType() const;
 		std::string		getValue() const;
 		std::string		getTypeString() const;
-		
+
 	private:
 		TokenType	_type;
 		std::string	_value;

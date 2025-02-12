@@ -225,8 +225,20 @@ void	Server::receiveData(int sd)
 		// Currently just print message
 		// TODO:
 		// ---> Parse and process message here <---
+		for (int i=0; i<rc; i++)
+		{
+			if (buffer[i] == '\r')
+				std::cout << "\\r";
+			else if(buffer[i] == '\n')
+				std::cout << "\\n";
+			else
+				std::cout << buffer[i];
+		}
+		std::cout << std::endl;
 		_users[sd].addToBuffer(buffer);
-		std::cout << _users[sd].getBuffer() << std::endl;
+		std::string	data = _users[sd].getNextCommand();
+		Lexer	lex(data);
+		lex.message();
 	}
 }
 

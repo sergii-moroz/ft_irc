@@ -31,7 +31,7 @@ class User
 		std::string const &	getNickname(void) const;
 		std::string const &	getUsername(void) const;
 		std::string const &	getRealname(void) const;
-		std::string	const & getBuffer(void) const;
+		std::string	getNextCommand(void);
 
 		void		setRegistered(bool val);
 		void		setPassOK(bool val);

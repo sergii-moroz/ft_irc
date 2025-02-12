@@ -81,9 +81,17 @@ std::string const &	User::getRealname(void) const
 	return (_realname);
 }
 
-std::string const &	User::getBuffer(void) const
+std::string	User::getNextCommand(void)
 {
-	return (_buffer);
+	size_t	pos = _buffer.find("\r\n");
+
+	if (pos == std::string::npos)
+		return ("");
+
+	std::string	s = _buffer.substr(0, pos + 2);
+	_buffer.erase(0, pos + 2);
+
+	return (s);
 }
 
 void	User::setRegistered(bool val)

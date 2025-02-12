@@ -60,14 +60,14 @@ TokenType Token::getType() const
 
 std::string Token::getTypeString() const
 {
-	static const std::array<std::string, 8> v = {"CR", "LF", "SPACE", "COLON", "DIGIT", "ALPHA", "UNDEFINED", "EOF"};
-	
-	if (_type >= v.size() || _type < 0)
+	const char	*v[] = {"CR", "LF", "SPACE", "COLON", "DIGIT", "ALPHA", "UNDEFINED", "EOF"};
+
+	if (_type >= sizeof(v) / sizeof(v[0]) || _type < 0)
 	{
 		std::cerr << "ERROR: Invalid token type!" << std::endl;
 		return "UNKNOWN"; // Return a default string if out of bounds
 	}
-	return v[_type];
+	return (v[_type]);
 }
 
 std::ostream & operator<<(std::ostream & out, Token const & t)

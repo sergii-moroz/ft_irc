@@ -26,6 +26,7 @@
 # include <map>
 
 # include <User.hpp>
+# include <Lexer.hpp>
 
 # define PORT	12345
 # define PASS	"42Heilbronn"
