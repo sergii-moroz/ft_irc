@@ -242,29 +242,17 @@ void	Server::receiveData(int sd)
 
 void	Server::processData(int sd)
 {
-	std::string	data = _users[sd].getNextCommand();
+	std::string		data = _users[sd].getNextCommand();
+	CommandHandler	cmdHandler(*this);
 
 	while (!data.empty())
 	{
-		Command	cmd;
 		Lexer	lex(data);
+		Command	cmd = lex.message();
 
-		cmd = lex.message();
-		std::cout << cmd << std::endl;
+		std::cout << cmd << std::endl; // <-- DEBUG
 
-		// --> execute cmd here <--
-		if (cmd.getName() == "CAP")
-		{
-			std::string	msg = ":server.name CAP client-nickname LS :\r\n";
-			sendData(sd, msg);
-		}
-		else if (cmd.getName() == "NICK")
-		{
-			std::vector< std::vector<std::string> >	p = cmd.getParameters();
-			_users[sd].setNickname(p[0][0]);
-			std::cout << "INFO: " << _users[sd] << std::endl;
-		}
-
+		cmdHandler.executeCommand(sd, cmd);
 		data = _users[sd].getNextCommand();
 	}
 }
@@ -307,6 +295,11 @@ void	Server::closeAllSockets(void)
 void	Server::addNewUser(int sd)
 {
 	_users[sd] = User(sd);
+}
+
+User &	Server::getUser(int sd)
+{
+	return (_users[sd]);
 }
 
 // ==========================================
