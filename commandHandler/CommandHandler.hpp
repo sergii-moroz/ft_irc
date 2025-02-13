@@ -15,7 +15,6 @@
 
 # include <iostream>
 # include <map>
-# include <functional>
 
 # include "Server.hpp"
 
@@ -39,6 +38,7 @@ class CommandHandler
 		void	handleCAP(int, Command const &);
 		void	handlePASS(int, Command const &);
 		void	handleNICK(int, Command const &);
+		void	handleUSER(int, Command const &);
 };
 
 #endif
