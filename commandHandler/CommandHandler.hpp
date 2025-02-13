@@ -14,14 +14,31 @@
 # define COMMAND_HANDLER_HPP
 
 # include <iostream>
+# include <map>
+# include <functional>
+
+# include "Server.hpp"
+
+class Server;
 
 class CommandHandler
 {
 	public:
 		CommandHandler();
 		~CommandHandler();
+		CommandHandler(Server &);
 		CommandHandler(CommandHandler const &);
 		CommandHandler &	operator=(CommandHandler const &);
+
+		void	setServer(Server & server);
+		void	executeCommand(int, Command const &);
+
+	private:
+		Server	*_server;
+
+		void	handleCAP(int, Command const &);
+		void	handlePASS(int, Command const &);
+		void	handleNICK(int, Command const &);
 };
 
 #endif
