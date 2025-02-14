@@ -25,8 +25,9 @@
 # include <vector>
 # include <map>
 
-# include <User.hpp>
-# include <Lexer.hpp>
+# include "User.hpp"
+# include "Lexer.hpp"
+# include "CommandHandler.hpp"
 
 # define PORT	12345
 # define PASS	"42Heilbronn"
@@ -48,6 +49,9 @@ class Server
 
 		void		init(void);
 		void		run(void);
+		void		sendData(int sd, std::string & data);
+		void		clearClient(int sd);
+		User &		getUser(int sd);
 
 	private:
 		void		handlePollIn(size_t i);
@@ -56,8 +60,6 @@ class Server
 		void		acceptClient(void);
 		void		receiveData(int sd);
 		void		processData(int sd);
-		void		sendData(int sd, std::string & data);
-		void		clearClient(int sd);
 		void		closeAllSockets(void);
 		void		addNewUser(int sd);
 
