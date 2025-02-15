@@ -102,6 +102,12 @@ int	Utils::validatePort(char const *arg)
 		return (-1);
 	}
 
+	if (port > 65353)
+	{
+		std::cerr << "ERROR: Port numbers could not be greater then 65353." << std::endl;
+		return (-1);
+	}
+
 	return (port);
 }
 
