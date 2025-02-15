@@ -6,7 +6,7 @@ CC				=	c++
 CCFLAGS			=	-Wall -Wextra -Werror -std=c++98
 RM				=	rm -rf
 
-SRC_DIRS		=	server user lexer command token commandHandler
+SRC_DIRS		=	server user lexer command token commandHandler utils
 vpath %.cpp $(SRC_DIRS)
 
 INC				=	$(addprefix -I, $(SRC_DIRS))
@@ -15,6 +15,7 @@ SRCS			=	main.cpp \
 					User.cpp \
 					Token.cpp Lexer.cpp Command.cpp \
 					CommandHandler.cpp \
+					Utils.cpp \
 					Server.cpp
 
 OBJ_DIR = obj
