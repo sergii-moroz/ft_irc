@@ -34,6 +34,7 @@ class Command {
 		bool					hasParamAtPos(size_t, size_t) const;
 		bool					hasParamAtPos(std::string const &, size_t, size_t) const;
 		bool					isParamEmpty(void) const;
+		std::string const &		getParamAtPos(size_t, size_t) const;
 
 	private:
 		std::string								_name;
