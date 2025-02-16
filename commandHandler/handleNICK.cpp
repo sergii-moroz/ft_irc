@@ -35,6 +35,8 @@ void	CommandHandler::handleNICK(int sd, Command const & cmd)
 		{
 			user.setNickname(newNickname);
 			std::cout << "INFO: " << oldNickname << " [" << sd << "] has change nickname to " << newNickname << std::endl;
+			std::string	msg = ":" + oldNickname + " NICK :" + newNickname + "\r\n";
+			_server->sendData(sd, msg);
 		}
 		else
 		{
