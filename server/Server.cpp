@@ -16,7 +16,7 @@
 // Constructors
 // ==========================================
 
-Server::Server() : _listen_sd(-1), _timeout(15 * 1000), _port(PORT), _pass(PASS)
+Server::Server() : _listen_sd(-1), _timeout(15 * 1000), _port(PORT), _pass(PASS), _name(NAME)
 {
 	std::cout << "Server: Default constructor called" << std::endl;
 }
@@ -27,7 +27,7 @@ Server::Server(Server const & copy)
 	*this = copy;
 }
 
-Server::Server(int port, std::string & pass) : _listen_sd(-1), _timeout(15 * 1000), _port(port), _pass(pass)
+Server::Server(int port, std::string & pass) : _listen_sd(-1), _timeout(15 * 1000), _port(port), _pass(pass), _name(NAME)
 {
 	std::cout << "Server: Custom constructor called" << std::endl;
 }
@@ -53,6 +53,7 @@ Server &	Server::operator=(Server const & rhs)
 		std::cout << "Server: Assignment operator called" << std::endl;
 		_port = rhs.getPort();
 		_pass = rhs.getPass();
+		_name = rhs.getName();
 	}
 	return (*this);
 }
@@ -69,6 +70,11 @@ int	Server::getPort(void) const
 std::string	Server::getPass(void) const
 {
 	return (_pass);
+}
+
+std::string	Server::getName(void) const
+{
+	return (_name);
 }
 
 // ==========================================

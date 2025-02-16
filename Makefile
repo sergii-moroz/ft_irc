@@ -14,7 +14,7 @@ INC				=	$(addprefix -I, $(SRC_DIRS))
 SRCS			=	main.cpp \
 					User.cpp \
 					Token.cpp Lexer.cpp Command.cpp \
-					CommandHandler.cpp \
+					CommandHandler.cpp handleCAP.cpp handleNumeric.cpp \
 					Utils.cpp \
 					Server.cpp
 

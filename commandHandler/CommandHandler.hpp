@@ -39,6 +39,8 @@ class CommandHandler
 		void	handlePASS(int, Command const &);
 		void	handleNICK(int, Command const &);
 		void	handleUSER(int, Command const &);
+
+		std::string	errNeedMoreParams(std::string const &, std::string const &) const;
 };
 
 #endif

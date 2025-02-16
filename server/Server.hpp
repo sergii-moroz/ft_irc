@@ -31,6 +31,7 @@
 
 # define PORT	12345
 # define PASS	"42Heilbronn"
+# define NAME	"irc.42heilbron.de"
 
 class Server
 {
@@ -46,6 +47,7 @@ class Server
 
 		int			getPort(void) const;
 		std::string	getPass(void) const;
+		std::string	getName(void) const;
 
 		void		init(void);
 		void		run(void);
@@ -70,6 +72,7 @@ class Server
 		std::map<int, User>			_users;
 		std::vector<struct pollfd>	_fds;
 		static bool					_forever;
+		std::string					_name;
 };
 
 #endif
