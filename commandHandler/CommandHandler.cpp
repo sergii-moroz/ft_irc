@@ -86,22 +86,6 @@ void	CommandHandler::executeCommand(int sd, Command const & cmd)
 	// 	"unknown command"
 }
 
-void	CommandHandler::handleCAP(int sd, Command const & cmd)
-{
-	std::vector< std::vector<std::string> >	params = cmd.getParameters();
-	if (params.empty())
-	{
-		std::string	msg = ":localhost 461\r\n";
-		_server->sendData(sd, msg);
-		// close connection ???
-	}
-	else if (params[0][0] == "LS")
-	{
-		std::string	msg = ":localhost CAP * LS :\r\n";
-		_server->sendData(sd, msg);
-	}
-}
-
 void	CommandHandler::handlePASS(int sd, Command const & cmd)
 {
 	std::vector< std::vector<std::string> >	params = cmd.getParameters();
