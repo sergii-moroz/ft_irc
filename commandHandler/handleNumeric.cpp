@@ -12,8 +12,6 @@
 
 #include "CommandHandler.hpp"
 
-
-
 // ==========================================
 // ERR_NEEDMOREPARAMS (461)
 // ==========================================
@@ -21,4 +19,13 @@
 std::string	CommandHandler::errNeedMoreParams(std::string const & serverName, std::string const & command) const
 {
 	return (":" + serverName + " 461 " + command + " :Not enough parameters\r\n");
+}
+
+// ==========================================
+// ERR_PASSWDMISMATCH (464)
+// ==========================================
+
+std::string	CommandHandler::errPasswdMismatch(std::string const & serverName) const
+{
+	return (":" + serverName + " 464 * :password incorect\r\n");
 }

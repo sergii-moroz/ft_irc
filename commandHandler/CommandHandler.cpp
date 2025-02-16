@@ -86,23 +86,6 @@ void	CommandHandler::executeCommand(int sd, Command const & cmd)
 	// 	"unknown command"
 }
 
-void	CommandHandler::handlePASS(int sd, Command const & cmd)
-{
-	std::vector< std::vector<std::string> >	params = cmd.getParameters();
-	if (params.empty())
-	{
-		std::string	msg = ":localhost 461 * :Not enough parameters\r\n";
-		_server->sendData(sd, msg);
-	}
-	else if (params[0][0] != _server->getPass())
-	{
-		std::string	msg = ":localhost 400 * :password incorect\r\n";
-		_server->sendData(sd, msg);
-		std::cout << "ERROR: ERR_PASSWDMISMATCH (464)" << std::endl; // <-- Server Side Logging
-		_server->clearClient(sd);
-	}
-}
-
 void	CommandHandler::handleNICK(int sd, Command const & cmd)
 {
 	std::vector< std::vector<std::string> >	params = cmd.getParameters();
