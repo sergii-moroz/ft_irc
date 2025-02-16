@@ -78,6 +78,11 @@ void	Command::addParam(std::vector<std::string> const & param)
 	_parameters.push_back(param);
 }
 
+std::string const &	Command::getParamAtPos(size_t row, size_t col) const
+{
+	return (_parameters[row][col]);
+}
+
 std::ostream &	Command::printParams(std::ostream & out) const
 {
 	for (size_t i=0; i<_parameters.size(); ++i)

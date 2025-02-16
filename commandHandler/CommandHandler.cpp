@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:21:11 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/13 09:21:11 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/16 19:50:48 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,16 +84,6 @@ void	CommandHandler::executeCommand(int sd, Command const & cmd)
 		(this->*(it->second))(sd, cmd);
 	// else
 	// 	"unknown command"
-}
-
-void	CommandHandler::handleNICK(int sd, Command const & cmd)
-{
-	std::vector< std::vector<std::string> >	params = cmd.getParameters();
-	if (!params.empty())
-	{
-		_server->getUser(sd).setNickname(params[0][0]);
- 		std::cout << "INFO: " << _server->getUser(sd) << std::endl; // <-- Server Side Logging
-	}
 }
 
 void	CommandHandler::handleUSER(int sd, const Command &cmd)

@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/11 18:10:03 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/16 19:48:25 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,6 +306,16 @@ void	Server::addNewUser(int sd)
 User &	Server::getUser(int sd)
 {
 	return (_users[sd]);
+}
+
+User	*Server::getUserByNickname(std::string const & nickname)
+{
+	for (std::map<int, User>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if (nickname.compare(it->second.getNickname()) == 0)
+			return (&(it->second));
+	}
+	return (NULL);
 }
 
 // ==========================================

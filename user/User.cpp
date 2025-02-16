@@ -13,10 +13,10 @@
 #include "User.hpp"
 
 User::User() : _fd(-1), _registered(false), _passOK(false),
-	_nickname(""), _username(""), _realname("") {}
+	_nickname("*"), _username(""), _realname("") {}
 
 User::User(int fd) : _fd(fd), _registered(false), _passOK(false),
-	_nickname(""), _username(""), _realname("") {}
+	_nickname("*"), _username(""), _realname("") {}
 
 User::User(User const & other)
 {

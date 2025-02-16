@@ -40,8 +40,10 @@ class CommandHandler
 		void	handleNICK(int, Command const &);
 		void	handleUSER(int, Command const &);
 
+		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;	// 431
+		std::string	errNicknameInUse(std::string const &, std::string const &, std::string const &) const;	// 433
 		std::string	errNeedMoreParams(std::string const &, std::string const &) const;	// 461
-		std::string	errPasswdMismatch(std::string const & serverName) const; 			// 464
+		std::string	errPasswdMismatch(std::string const &) const; 						// 464
 };
 
 #endif

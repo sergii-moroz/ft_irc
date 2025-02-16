@@ -13,6 +13,24 @@
 #include "CommandHandler.hpp"
 
 // ==========================================
+// ERR_NONICKNAMEGIVEN (431)
+// ==========================================
+
+std::string	CommandHandler::errNoNicknameGiven(std::string const & serverName, std::string const & client) const
+{
+	return (":" + serverName + " 431 " + client + " :No nickname given\r\n");
+}
+
+// ==========================================
+// ERR_NICKNAMEINUSE (433)
+// ==========================================
+
+std::string	CommandHandler::errNicknameInUse(std::string const & serverName, std::string const & client, std::string const & nick) const
+{
+	return (":" + serverName + " 433 " + client + " " + nick + " :Nickname is already in use\r\n");
+}
+
+// ==========================================
 // ERR_NEEDMOREPARAMS (461)
 // ==========================================
 
