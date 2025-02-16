@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/01/24 20:32:05 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/16 19:49:32 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Server
 		void		sendData(int sd, std::string & data);
 		void		clearClient(int sd);
 		User &		getUser(int sd);
+		User		*getUserByNickname(std::string const &);
 
 	private:
 		void		handlePollIn(size_t i);
