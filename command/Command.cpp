@@ -86,6 +86,29 @@ std::ostream &	Command::printParams(std::ostream & out) const
 	return (out);
 }
 
+bool	Command::isParamEmpty(void) const
+{
+	return (_parameters.empty());
+}
+
+bool	Command::hasParamAtPos(size_t row, size_t col) const
+{
+	if (_parameters.empty())
+		return (false);
+	if (_parameters.size() < row)
+		return (false);
+	if (_parameters[row].size() < col)
+		return (false);
+	return (true);
+}
+
+bool	Command::hasParamAtPos(std::string const & key, size_t row, size_t col) const
+{
+	if (hasParamAtPos(row, col) && key.compare(_parameters[row][col]) == 0)
+		return (true);
+	return (false);
+}
+
 // ==========================================
 // Overload operator<<
 // ==========================================

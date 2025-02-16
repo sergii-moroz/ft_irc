@@ -31,6 +31,9 @@ class Command {
 		void					addParam(std::vector<std::string> const &);
 		std::ostream &			printParams(std::ostream &) const;
 		std::vector< std::vector<std::string> > const &	getParameters() const;
+		bool					hasParamAtPos(size_t, size_t) const;
+		bool					hasParamAtPos(std::string const &, size_t, size_t) const;
+		bool					isParamEmpty(void) const;
 
 	private:
 		std::string								_name;
