@@ -85,16 +85,3 @@ void	CommandHandler::executeCommand(int sd, Command const & cmd)
 	// else
 	// 	"unknown command"
 }
-
-void	CommandHandler::handleUSER(int sd, const Command &cmd)
-{
-	std::vector< std::vector<std::string> >	params = cmd.getParameters();
-	if (!params.empty()) {
-		_server->getUser(sd).setUsername(params[0][0]);
-		_server->getUser(sd).setRealname(cmd.getTail());
-		std::cout << "INFO: " << _server->getUser(sd) << std::endl; // <-- Server Side Logging
-		// User is registered --> send Welcome message
-		std::string	msg = ":localhost 001 root :Welcome to the IRC Network, <nickname>!<user>@<host>\r\n";
-		_server->sendData(sd, msg);
-	}
-}
