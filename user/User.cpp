@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 12:11:32 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/11 18:49:42 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/17 16:00:18 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -111,7 +111,7 @@ void	User::setNickname(std::string const & nick)
 
 void	User::setUsername(std::string const & user)
 {
-	_username = user;
+	_username = Utils::validateUsername(user, USERLEN);
 }
 
 void	User::setRealname(std::string const & real)
