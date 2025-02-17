@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/16 12:56:32 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/17 16:05:28 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,15 @@ std::string	CommandHandler::errNicknameInUse(std::string const & serverName, std
 std::string	CommandHandler::errNeedMoreParams(std::string const & serverName, std::string const & command) const
 {
 	return (":" + serverName + " 461 " + command + " :Not enough parameters\r\n");
+}
+
+// ==========================================
+// ERR_ALREADYREGISTERED (462)
+// ==========================================
+
+std::string	CommandHandler::errAlreadyRegistered(std::string const & serverName, std::string const & client) const
+{
+	return (":" + serverName + " 462 " + client +" :You may not reregister\r\n");
 }
 
 // ==========================================
