@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 12:04:09 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/11 18:49:17 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/17 16:00:24 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -15,6 +15,10 @@
 
 # include <string>
 # include <iostream>
+
+# include "Utils.hpp"
+
+# define USERLEN 18
 
 class User
 {
