@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 15:00:16 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/15 16:10:26 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/17 16:01:54 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,4 +135,27 @@ std::string	Utils::validatePass(char const *arg)
 	}
 
 	return (pass);
+}
+
+std::string	Utils::generateRandomString(size_t length)
+{
+	const std::string	chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	std::string			result;
+
+	std::srand(std::time(0));
+	for (size_t i = 0; i < length; ++i)
+		result += chars[std::rand() % chars.size()];
+
+	return (result);
+}
+
+std::string	Utils::validateUsername(std::string const & username, size_t length)
+{
+	size_t	slen = Utils::trim(username).length();
+
+	if (slen == 0)
+		return (Utils::generateRandomString(length));
+	else if (slen > length)
+		return (username.substr(0, length));
+	return (username);
 }
