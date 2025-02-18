@@ -6,18 +6,34 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:51:11 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/19 00:15:33 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/19 00:52:22 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "Channel.hpp"
 #include "Server.hpp"
-#include <iostream>
+#include <iostream> 
 
 Channel::Channel(const std::string &name)
 : _name(name)
 {
 }
+
+Channel::Channel(const Channel &other)
+: _name(other._name), _userFds(other._userFds)
+{
+}
+
+Channel &Channel::operator=(const Channel &other)
+{
+    if (this != &other)
+    {
+        _name = other._name;
+        _userFds = other._userFds;
+    }
+    return *this;
+}
+
 
 Channel::~Channel()
 {
