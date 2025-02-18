@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/16 19:48:25 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/18 22:02:39 by smoreron         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "Server.hpp"
 
@@ -40,6 +40,12 @@ Server::~Server()
 {
 	std::cout << "Server: Destructor called" << std::endl;
 	closeAllSockets();
+
+	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		delete it->second;
+	}
+	_channels.clear();
 }
 
 // ==========================================
@@ -336,4 +342,35 @@ void	Server::usage(void)
 	std::cout << "example: ./ircserv <port> <password>" << std::endl;
 }
 
-// What if _listen_sd closed unexpected?
+
+// ==========================================
+// chanel
+// ==========================================
+
+Channel * Server::getChannelByName(std::string const &channelName)
+{
+	std::map<std::string, Channel*>::iterator it = _channels.find(channelName);
+	if (it != _channels.end())
+		return it->second;
+	return NULL;
+}
+
+
+void Server::addChannel(Channel *channel)
+{
+	if (!channel)
+		return;
+	_channels[channel->getName()] = channel;
+}
+
+Channel * Server::findOrCreateChannel(std::string const &channelName)
+{
+	Channel *chan = getChannelByName(channelName);
+	if (!chan)
+	{
+		chan = new Channel(channelName);
+		addChannel(chan);
+		std::cout << "INFO: Created new channel: " << channelName << std::endl;
+	}
+	return chan;
+}

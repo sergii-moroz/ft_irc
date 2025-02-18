@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/18 12:29:36 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/18 21:32:47 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -29,6 +29,7 @@
 # include "User.hpp"
 # include "Lexer.hpp"
 # include "CommandHandler.hpp"
+# include "Channel.hpp"
 
 # define PORT	12345
 # define PASS	"42Heilbronn"
@@ -57,6 +58,11 @@ class Server
 		User &		getUser(int sd);
 		User		*getUserByNickname(std::string const &);
 
+		//chanel
+		Channel *	getChannelByName(std::string const &channelName);
+		void		addChannel(Channel *channel);
+		Channel *	findOrCreateChannel(std::string const &channelName);
+
 	private:
 		void		handlePollIn(size_t i);
 		void		handlePollHup(size_t & i);
@@ -75,6 +81,8 @@ class Server
 		std::vector<struct pollfd>	_fds;
 		static bool					_forever;
 		std::string					_name;
+
+		std::map<std::string, Channel*> _channels;
 };
 
 #endif

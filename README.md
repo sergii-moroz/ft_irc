@@ -28,3 +28,15 @@ make run
 
 <!-- &check; -->
 <!-- <input type="checkbox" disabled checked /> -->
+
+
+
+git branch
+git checkout -b branch3
+git push -u origin branch3
+
+telnet localhost 4444
+PASS 123123
+NICK serg
+
+USER serg 0 * :serg Ivanov
