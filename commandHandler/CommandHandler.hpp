@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/18 12:43:00 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/18 20:45:36 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -42,7 +42,8 @@ class CommandHandler
 
 		void	handlePONG(int, Command const &);
 		void	handlePING(int, Command const &);
-		
+		void	handlePRIVMSG(int, Command const &);
+
 		
 		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;		// 431
 		std::string	errNicknameInUse(std::string const &, std::string const &, std::string const &) const;	// 433

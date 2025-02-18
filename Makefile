@@ -6,7 +6,7 @@ CC				=	c++
 CCFLAGS			=	-Wall -Wextra -Werror -std=c++98
 RM				=	rm -rf
 
-SRC_DIRS		=	server user lexer command token commandHandler utils
+SRC_DIRS		=	server user lexer command token commandHandler utils channel
 vpath %.cpp $(SRC_DIRS)
 
 INC				=	$(addprefix -I, $(SRC_DIRS))
@@ -15,7 +15,8 @@ SRCS			=	main.cpp \
 					User.cpp \
 					Token.cpp Lexer.cpp Command.cpp \
 					CommandHandler.cpp handleCAP.cpp handleNumeric.cpp \
-					handlePASS.cpp handleNICK.cpp handleUSER.cpp handlePING.cpp handlePONG.cpp \
+					Channel.cpp \
+					handlePASS.cpp handleNICK.cpp handleUSER.cpp handlePING.cpp handlePONG.cpp handlePRIVMSG.cpp \
 					Utils.cpp \
 					Server.cpp
 
