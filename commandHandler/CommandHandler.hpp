@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   CommandHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/17 16:05:14 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/18 12:43:00 by smoreron         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef COMMAND_HANDLER_HPP
 # define COMMAND_HANDLER_HPP
@@ -40,6 +40,10 @@ class CommandHandler
 		void	handleNICK(int, Command const &);
 		void	handleUSER(int, Command const &);
 
+		void	handlePONG(int, Command const &);
+		void	handlePING(int, Command const &);
+		
+		
 		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;		// 431
 		std::string	errNicknameInUse(std::string const &, std::string const &, std::string const &) const;	// 433
 		std::string	errNeedMoreParams(std::string const &, std::string const &) const;		// 461
