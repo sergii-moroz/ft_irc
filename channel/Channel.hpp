@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:50:06 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/19 00:15:52 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/19 00:52:27 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -15,7 +15,7 @@
 
 #include <string>
 #include <set>
-#include "User.hpp"
+#include "User.hpp" 
 
 class Server; 
 
@@ -23,7 +23,9 @@ class Channel
 {
 public:
     
-    Channel(const std::string & name);
+	Channel(const std::string & name);
+	Channel(const Channel &other);
+	Channel &operator=(const Channel &other);
     ~Channel();
 
     
