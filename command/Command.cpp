@@ -6,15 +6,11 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 23:04:51 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/01 15:37:03 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/19 00:16:39 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "Command.hpp"
-
-// ==========================================
-// Constructors
-// ==========================================
 
 Command::Command() : _name(""), _tail("") {}
 
@@ -23,15 +19,7 @@ Command::Command(Command const & other)
 	*this = other;
 }
 
-// ==========================================
-// Destructor
-// ==========================================
-
 Command::~Command() {}
-
-// ==========================================
-// Assignment operator=()
-// ==========================================
 
 Command &	Command::operator=(Command const & other)
 {
@@ -43,10 +31,6 @@ Command &	Command::operator=(Command const & other)
 	}
 	return (*this);
 }
-
-// ==========================================
-// Getters / Setters
-// ==========================================
 
 std::string const &	Command::getName(void) const
 {
@@ -96,27 +80,33 @@ bool	Command::isParamEmpty(void) const
 	return (_parameters.empty());
 }
 
-bool	Command::hasParamAtPos(size_t row, size_t col) const
+bool Command::hasParamAtPos(size_t row, size_t col) const
 {
-	if (_parameters.empty())
-		return (false);
-	if (_parameters.size() < row)
-		return (false);
-	if (_parameters[row].size() < col)
-		return (false);
-	return (true);
+	
+	if (row >= _parameters.size())
+		return false;
+
+	
+	if (col >= _parameters[row].size())
+		return false;
+
+	return true;
 }
 
-bool	Command::hasParamAtPos(std::string const & key, size_t row, size_t col) const
+
+bool Command::hasParamAtPos(std::string const & key, size_t row, size_t col) const
 {
-	if (hasParamAtPos(row, col) && key.compare(_parameters[row][col]) == 0)
-		return (true);
-	return (false);
+	
+	if (!hasParamAtPos(row, col))
+		return false;
+
+	return (key.compare(_parameters[row][col]) == 0);
 }
 
-// ==========================================
-// Overload operator<<
-// ==========================================
+
+
+
+
 
 std::ostream &	operator<<(std::ostream & out, Command const & cmd)
 {
