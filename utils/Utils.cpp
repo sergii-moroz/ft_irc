@@ -58,7 +58,7 @@ std::string	Utils::trim(std::string const & s)
 {
 	size_t	start = s.find_first_not_of("\f\n\r\t\v ");
 	if (start == std::string::npos)
-		return (s); // no content
+		return (std::string()); // no content
 	size_t	end	= s.find_last_not_of("\f\n\r\t\v ");
 	size_t	range = end - start + 1;
 	return (s.substr(start, range));
