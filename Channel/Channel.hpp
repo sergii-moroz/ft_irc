@@ -12,34 +12,38 @@
 
 
 #ifndef CHANNEL_HPP
-#define CHANNEL_HPP
+# define CHANNEL_HPP
 
-#include <string>
-#include <set>
-#include "User.hpp"
+# include <string>
+# include <set>
 
-class Server; 
+# include "User.hpp"
 
 class Channel
 {
-public:
-	Channel(const std::string &name);
-	~Channel();
+	public:
+		Channel();
+		~Channel();
+		Channel(Channel const &);
+		Channel(std::string const &);
+		Channel &	operator=(Channel const &);
 
-	
-	const std::string & getName() const;
+		const std::string & getName() const;
+		std::string const &	getTopic() const;
+		void	setName(std::string const &);
+		void	setTopic(std::string const &);
 
-	
-	void addUser(int userFd);
-	void removeUser(int userFd);
-	bool hasUser(int userFd) const;
+		void addUser(int userFd);
+		void removeUser(int userFd);
+		bool hasUser(int userFd) const;
 
-	void broadcast(Server &server, const std::string &senderNick, 
-				   const std::string &message, int excludeFd);
+		// void broadcast(Server &server, const std::string &senderNick, const std::string &message, int excludeFd);
 
-private:
-	std::string   _name;	  
-	std::set<int> _userFds;   
+	private:
+		std::string		_name;
+		std::string		_topic;
+		char			_mode;
+		std::set<int>	_userFds;
 
 };
 
