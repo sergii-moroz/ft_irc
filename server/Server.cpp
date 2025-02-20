@@ -30,6 +30,8 @@ Server::Server(Server const & copy)
 Server::Server(int port, std::string & pass) : _listen_sd(-1), _timeout(15 * 1000), _port(port), _pass(pass), _name(NAME)
 {
 	std::cout << "Server: Custom constructor called" << std::endl;
+	createChannel("general");
+	createChannel("smalltalk");
 }
 
 // ==========================================
@@ -41,11 +43,11 @@ Server::~Server()
 	std::cout << "Server: Destructor called" << std::endl;
 	closeAllSockets();
 
-	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-	{
-		delete it->second;
-	}
-	_channels.clear();
+	// for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	// {
+	// 	delete it->second;
+	// }
+	// _channels.clear();
 }
 
 // ==========================================
@@ -347,30 +349,28 @@ void	Server::usage(void)
 // chanel
 // ==========================================
 
-Channel * Server::getChannelByName(std::string const &channelName)
+Channel	*Server::getChannelByName(std::string const &channelName)
 {
-	std::map<std::string, Channel*>::iterator it = _channels.find(channelName);
+	std::map<std::string, Channel>::iterator it = _channels.find(channelName);
 	if (it != _channels.end())
-		return it->second;
-	return NULL;
+		return (&(it->second));
+	return (NULL);
 }
 
-
-void Server::addChannel(Channel *channel)
+void	Server::createChannel(std::string const & channelName)
 {
-	if (!channel)
-		return;
-	_channels[channel->getName()] = channel;
+	_channels[channelName] = Channel(channelName);
 }
 
-Channel * Server::findOrCreateChannel(std::string const &channelName)
-{
-	Channel *chan = getChannelByName(channelName);
-	if (!chan)
-	{
-		chan = new Channel(channelName);
-		addChannel(chan);
-		std::cout << "INFO: Created new channel: " << channelName << std::endl;
-	}
-	return chan;
-}
+// Channel * Server::findOrCreateChannel(std::string const &channelName)
+// {
+// 	Channel *chan = getChannelByName(channelName);
+// 	if (!chan)
+// 	{
+// 		_channels[channelName] = Channel(ChannelName);
+// 		// chan = new Channel(channelName);
+// 		addChannel(chan);
+// 		std::cout << "INFO: Created new channel: " << channelName << std::endl;
+// 	}
+// 	return chan;
+// }

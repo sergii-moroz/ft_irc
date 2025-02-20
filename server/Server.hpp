@@ -60,8 +60,9 @@ class Server
 
 		//chanel
 		Channel *	getChannelByName(std::string const &channelName);
-		void		addChannel(Channel *channel);
-		Channel *	findOrCreateChannel(std::string const &channelName);
+		void		createChannel(std::string const &);
+		// void		addChannel(Channel *channel);
+		// Channel *	findOrCreateChannel(std::string const &channelName);
 
 	private:
 		void		handlePollIn(size_t i);
@@ -82,7 +83,7 @@ class Server
 		static bool					_forever;
 		std::string					_name;
 
-		std::map<std::string, Channel*> _channels;
+		std::map<std::string, Channel>	_channels;
 };
 
 #endif
