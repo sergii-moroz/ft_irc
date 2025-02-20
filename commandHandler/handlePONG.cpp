@@ -10,27 +10,22 @@
 /*                                                                            */
 /******************************************************************************/
 
-
 #include "CommandHandler.hpp"
-
 
 void	CommandHandler::handlePONG(int sd, Command const & cmd)
 {
-
+	User &	user = _server->getUser(sd);
+	std::string nickname = user.getNickname();
 
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
-		std::string nickname = _server->getUser(sd).getNickname();
-		if (nickname.empty())
-			nickname = "*";
-
-		std::cout << "ERROR: user [" << sd << "] ERR_NEEDMOREPARAMS (461) - PONG" << std::endl;
-		std::string msg = errNeedMoreParams(_server->getName(), "PONG");
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NEEDMOREPARAMS (461) - " << cmd.getName() << std::endl;
+		std::string msg = errNeedMoreParams(_server->getName(), cmd.getName());
 		_server->sendData(sd, msg);
 	}
 	else
 	{
 		std::string token = cmd.getParamAtPos(0, 0);
-		std::cout << "INFO: user [" << sd << "] PONG received with token: " << token << std::endl;
+		std::cout << "INFO: " << nickname << " [" << sd << "] PONG received with token: " << token << std::endl;
 	}
 }

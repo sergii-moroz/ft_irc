@@ -15,25 +15,22 @@
 
 void	CommandHandler::handlePING(int sd, Command const & cmd)
 {
+	User &		user = _server->getUser(sd);
+	std::string nickname = user.getNickname();
+
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
-		std::string nickname = _server->getUser(sd).getNickname();
-		if (nickname.empty())
-			nickname = "*";
-
-		std::cout << "ERROR: user [" << sd << "] ERR_NEEDMOREPARAMS (461) - PING" << std::endl;
-		std::string msg = errNeedMoreParams(_server->getName(), "PING");
+		std::cerr << "ERROR: " <<  nickname << " [" << sd << "] ERR_NEEDMOREPARAMS (461) - " << cmd.getName() << std::endl;
+		std::string msg = errNeedMoreParams(_server->getName(), cmd.getName());
 		_server->sendData(sd, msg);
 	}
 	else
 	{
 		std::string token = cmd.getParamAtPos(0, 0);
+		std::cout << "INFO: " << nickname << " [" << sd << "] sent PING with token: " << token << std::endl;
 
-		std::cout << "INFO: user [" << sd << "] sent PING with token: " << token << std::endl;
-
-		std::string response = ":" + _server->getName() +
-							   " PONG " + _server->getName() +
-							   " :" + token + "\r\n";
+		std::string response = ":" + _server->getName()
+			+ " PONG " + _server->getName() + " :" + token + "\r\n";
 
 		_server->sendData(sd, response);
 	}

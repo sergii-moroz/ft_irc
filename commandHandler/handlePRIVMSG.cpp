@@ -11,72 +11,49 @@
 /******************************************************************************/
 
 #include "CommandHandler.hpp"
-#include "Server.hpp"
-#include "User.hpp"
-#include "Command.hpp"
-#include <iostream>
-
-
 
 void CommandHandler::handlePRIVMSG(int sd, Command const &cmd)
 {
-	
+	User &		sender = _server->getUser(sd);
+	std::string	senderNick = sender.getNickname();
+
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
-		
-		std::string errMsg = errNeedMoreParams(_server->getName(), "PRIVMSG");
-		_server->sendData(sd, errMsg);
+		std::cout << "ERROR: " + senderNick + " [" << sd << "] ERR_NEEDMOREPARAMS (461)" << std::endl;
+		std::string	msg = errNeedMoreParams(_server->getName(), cmd.getName());
+		_server->sendData(sd, msg);
 		return;
 	}
 
-	
-	User &sender = _server->getUser(sd);
-	std::string senderNick = sender.getNickname();
-	if (senderNick.empty())
-		senderNick = "*";
-
-	
-	std::string target = cmd.getParamAtPos(0, 0);
-
-	
-	
-	
-	
-	std::string message = cmd.getTail(); 
-	
-	if (message.empty() && cmd.hasParamAtPos(0, 1))
-		message = cmd.getParamAtPos(0, 1);
-
-	
-	if (!target.empty() && target[0] == '#')
+	/*if (!target.empty() && target[0] == '#')
 	{
 		Channel *channel = _server->getChannelByName(target);
 		if (!channel)
 		{
-			
-			std::string errMsg = ":" + _server->getName() + " 401 " + senderNick + " " 
+
+			std::string errMsg = ":" + _server->getName() + " 401 " + senderNick + " "
 							   + target + " :No such channel\r\n";
 			_server->sendData(sd, errMsg);
 			return;
 		}
-		
+
 		channel->broadcast(*_server, senderNick, message, sd);
-	}
+	}*/
 	else
 	{
-		
-		User *recipient = _server->getUserByNickname(target);
+		std::string	recipientNick = cmd.getParamAtPos(0, 0);
+		User		*recipient = _server->getUserByNickname(recipientNick);
 		if (!recipient)
 		{
-			
-			std::string errMsg = ":" + _server->getName() + " 401 " + senderNick + " " 
-							   + target + " :No such nick\r\n";
-			_server->sendData(sd, errMsg);
-			return;
+			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHNICK (401)" << std::endl;
+			std::string	msg = errNoSuchNick(_server->getName(), senderNick, recipientNick);
+			_server->sendData(sd, msg);
+			return ;
 		}
-		
-		std::string msg = ":" + senderNick + " PRIVMSG " + target + " :" + message + "\r\n";
-		_server->sendData(recipient->getFd(), msg);
+		int	recipientSD = recipient->getFd();
+		std::string	msg = ":" + senderNick + "!" + sender.getUsername()
+			+ "@" + _server->getName()
+			+ " PRIVMSG " + recipientNick + " :" + cmd.getTail() + "\r\n";
+		_server->sendData(recipientSD, msg);
 	}
 }
-	

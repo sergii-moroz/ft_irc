@@ -14,7 +14,6 @@
 # define COMMAND_HANDLER_HPP
 
 # include <iostream>
-# include <map>
 
 # include "Server.hpp"
 
@@ -44,7 +43,7 @@ class CommandHandler
 		void	handlePING(int, Command const &);
 		void	handlePRIVMSG(int, Command const &);
 
-		
+		std::string	errNoSuchNick(std::string const &, std::string const &, std::string const &) const;		// 401
 		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;		// 431
 		std::string	errNicknameInUse(std::string const &, std::string const &, std::string const &) const;	// 433
 		std::string	errNeedMoreParams(std::string const &, std::string const &) const;		// 461

@@ -15,11 +15,11 @@
 void	CommandHandler::handleUSER(int sd, const Command &cmd)
 {
 	User &		user = _server->getUser(sd);
+	std::string	nickname = user.getNickname();
 
 	if (user.isRegistered())
 	{
-		std::string nickname = user.getNickname();
-		std::cout << "ERROR: "+ nickname +" [" << sd << "] ERR_ALREADYREGISTERED (462)" << std::endl;
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_ALREADYREGISTERED (462)" << std::endl;
 		std::string	msg = errAlreadyRegistered(_server->getName(), nickname);
 		_server->sendData(sd, msg);
 		return ;
@@ -27,14 +27,13 @@ void	CommandHandler::handleUSER(int sd, const Command &cmd)
 
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
-		std::cout << "ERROR: user [" << sd << "] ERR_NEEDMOREPARAMS (461)" << std::endl;
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NEEDMOREPARAMS (461) - " << cmd.getName() << std::endl;
 		std::string	msg = errNeedMoreParams(_server->getName(), cmd.getName());
 		_server->sendData(sd, msg);
 		_server->clearClient(sd);
 	}
 	else
 	{
-		// User &		user = _server->getUser(sd);
 		std::string	username = cmd.getParamAtPos(0, 0);
 		std::string	realname = cmd.getTail();
 
@@ -42,6 +41,7 @@ void	CommandHandler::handleUSER(int sd, const Command &cmd)
 		user.setRealname(realname);
 		user.setRegistered(true);
 
+		std::cout << "INFO: " << nickname << "!" << username << "@" << _server->getName() << " [" << sd << "] registered with realname: "  << realname << std::endl;
 		std::cout << "INFO: " << user << std::endl;
 		std::string	msg = ":localhost 001 root :Welcome to the IRC Network, <nickname>!<user>@<host>\r\n";
 		_server->sendData(sd, msg);

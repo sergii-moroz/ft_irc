@@ -14,36 +14,33 @@
 
 void	CommandHandler::handleNICK(int sd, Command const & cmd)
 {
+	User &		user = _server->getUser(sd);
+	std::string	nickname = user.getNickname();
+
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
-		std::string	nickname = _server->getUser(sd).getNickname();
-		if (nickname.empty())
-			nickname = "*";
-		std::cout << "ERROR: user [" << sd << "] ERR_NONICKNAMEGIVEN (431)" << std::endl;
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NONICKNAMEGIVEN (431)" << std::endl;
 		std::string	msg = errNoNicknameGiven(_server->getName(), nickname);
 		_server->sendData(sd, msg);
 	}
 	else
 	{
-		User &	user = _server->getUser(sd);
-		std::string	oldNickname = user.getNickname();
 		std::string	newNickname = cmd.getParamAtPos(0, 0);
 		// check here if new nickname is valid
 		User	*found = _server->getUserByNickname(newNickname);
 
 		if (!found)
 		{
+			std::cout << "INFO: " << nickname << " [" << sd << "] has change nickname to " << newNickname << std::endl;
 			user.setNickname(newNickname);
-			std::cout << "INFO: " << oldNickname << " [" << sd << "] has change nickname to " << newNickname << std::endl;
-			std::string	msg = ":" + oldNickname + " NICK :" + newNickname + "\r\n";
+			std::string	msg = ":" + nickname + " NICK :" + newNickname + "\r\n";
 			_server->sendData(sd, msg);
 		}
 		else
 		{
-			std::cout << "ERROR: " << oldNickname << " [" << sd << "] ERR_NICKNAMEINUSE (433)" << std::endl;
-			std::string	msg = errNicknameInUse(_server->getName(), oldNickname, newNickname);
+			std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NICKNAMEINUSE (433)" << std::endl;
+			std::string	msg = errNicknameInUse(_server->getName(), nickname, newNickname);
 			_server->sendData(sd, msg);
 		}
-		// std::cout << "INFO: " << _server->getUser(sd) << std::endl; // <-- Server Side Logging
 	}
 }

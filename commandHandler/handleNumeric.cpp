@@ -13,6 +13,15 @@
 #include "CommandHandler.hpp"
 
 // ==========================================
+// ERR_NOSUCHNICK (401)
+// ==========================================
+
+std::string	CommandHandler::errNoSuchNick(std::string const & serverName, std::string const & client, std::string const & nick) const
+{
+	return (":" + serverName + " 401 " + client + " " + nick + " :No such nick/channel\r\n");
+}
+
+// ==========================================
 // ERR_NONICKNAMEGIVEN (431)
 // ==========================================
 
