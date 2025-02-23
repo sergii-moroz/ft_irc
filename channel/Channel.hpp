@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:50:06 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/23 12:54:14 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/23 15:07:48 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -38,8 +38,12 @@ class Channel
 		void addUser(int userFd);
 		void removeUser(int userFd);
 		bool hasUser(int userFd) const;
+		std::set<int> getUsers() const;
 
 		void broadcast(Server &server, const std::string &senderNick, const std::string &message, int excludeFd);
+
+		void broadcastRaw(Server &server, const std::string &msg);
+
 
 	private:
 		std::string		_name;

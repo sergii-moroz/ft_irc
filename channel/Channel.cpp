@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:51:11 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/23 12:56:04 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/23 15:08:13 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -96,5 +96,17 @@ void Channel::broadcast(Server &server, const std::string &senderNick,
 		continue;
 	server.sendData(*it, fullMsg);
 	}
+}
+
+
+void Channel::broadcastRaw(Server &server, const std::string &msg)
+{
+	for (std::set<int>::iterator it = _userFds.begin(); it != _userFds.end(); ++it)
+	{
+		server.sendData(*it, msg);
+	}
+}
+std::set<int> Channel::getUsers() const {
+    return _userFds;
 }
 

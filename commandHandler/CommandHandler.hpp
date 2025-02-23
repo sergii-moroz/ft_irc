@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/23 12:37:24 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/23 19:29:38 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -44,6 +44,7 @@ class CommandHandler
 		void	handlePRIVMSG(int, Command const &);
 
 		void	handleJOIN(int, Command const &);
+		void	handleKICK(int, Command const &);
 
 		std::string	errNoSuchNick(std::string const &, std::string const &, std::string const &) const;		// 401
 		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;		// 431

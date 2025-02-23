@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/23 12:56:49 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/23 14:58:39 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -52,10 +52,11 @@ class Server
 		int			getPort(void) const;
 		std::string	getPass(void) const;
 		std::string	getName(void) const;
+		std::map<int, User> getAllUsers() const;
 
 		void		init(void);
 		void		run(void);
-		void		sendData(int sd, std::string & data);
+		void		sendData(int sd, const std::string & data);
 		void		clearClient(int sd);
 		User &		getUser(int sd);
 		User		*getUserByNickname(std::string const &);

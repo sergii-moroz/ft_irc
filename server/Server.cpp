@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/18 22:02:39 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/23 14:58:59 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -271,7 +271,7 @@ void	Server::processData(int sd)
 	}
 }
 
-void	Server::sendData(int sd, std::string & data)
+void	Server::sendData(int sd, const std::string & data)
 {
 	if (send(sd, data.c_str(), data.size(), 0) < 0)
 	{
@@ -374,3 +374,6 @@ void	Server::createChannel(std::string const & channelName)
 // 	}
 // 	return chan;
 // }
+std::map<int, User> Server::getAllUsers() const {
+    return _users;
+}
