@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:21:11 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/18 20:43:40 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/23 12:46:21 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -79,7 +79,8 @@ void	CommandHandler::executeCommand(int sd, Command const & cmd)
 		std::make_pair("PING", &CommandHandler::handlePING),
 		std::make_pair("PONG", &CommandHandler::handlePONG),
 		std::make_pair("PRIVMSG", &CommandHandler::handlePRIVMSG),
-	};
+		std::make_pair("JOIN", &CommandHandler::handleJOIN),
+	};	
 	static const std::map<std::string, cmdFunc>	cmdMap(cmdArray, cmdArray + sizeof(cmdArray) / sizeof(cmdArray[0]));
 	std::map<std::string, cmdFunc>::const_iterator	it = cmdMap.find(cmd.getName());
 

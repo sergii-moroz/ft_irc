@@ -6,11 +6,12 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:51:11 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/19 00:52:22 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/23 12:56:04 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "Channel.hpp"
+#include "Server.hpp" 
 
 Channel::Channel() : _name(""), _topic("unknown"), _mode(0)
 {
@@ -80,17 +81,20 @@ bool Channel::hasUser(int userFd) const
 	return (_userFds.find(userFd) != _userFds.end());
 }
 
-// void Channel::broadcast(Server &server, const std::string &senderNick,
-// 						const std::string &message, int excludeFd)
-// {
-// 	std::string fullMsg = ":" + senderNick
-// 						+ " PRIVMSG " + _name
-// 						+ " :" + message
-// 						+ "\r\n";
-// 	for (std::set<int>::iterator it = _userFds.begin(); it != _userFds.end(); ++it)
-// 	{
-// 		if (*it == excludeFd)
-// 			continue;
-// 		server.sendData(*it, fullMsg);
-// 	}
-// }
+// Channel.cpp
+
+void Channel::broadcast(Server &server, const std::string &senderNick,
+	const std::string &message, int excludeFd)
+{
+	std::string fullMsg = ":" + senderNick
+		+ " PRIVMSG " + _name
+		+ " :" + message
+		+ "\r\n";
+	for (std::set<int>::iterator it = _userFds.begin(); it != _userFds.end(); ++it)
+	{
+	if (*it == excludeFd)
+		continue;
+	server.sendData(*it, fullMsg);
+	}
+}
+

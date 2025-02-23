@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/18 21:32:47 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/23 12:56:49 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -34,6 +34,8 @@
 # define PORT	12345
 # define PASS	"42Heilbronn"
 # define NAME	"irc.42heilbron.de"
+
+
 
 class Server
 {

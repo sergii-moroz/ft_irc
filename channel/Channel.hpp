@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:50:06 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/18 22:05:09 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/23 12:54:14 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -19,6 +19,8 @@
 
 # include "User.hpp"
 
+
+class Server;
 class Channel
 {
 	public:
@@ -37,7 +39,7 @@ class Channel
 		void removeUser(int userFd);
 		bool hasUser(int userFd) const;
 
-		// void broadcast(Server &server, const std::string &senderNick, const std::string &message, int excludeFd);
+		void broadcast(Server &server, const std::string &senderNick, const std::string &message, int excludeFd);
 
 	private:
 		std::string		_name;
