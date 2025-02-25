@@ -16,7 +16,7 @@ SRCS			=	main.cpp \
 					Token.cpp Lexer.cpp Command.cpp \
 					CommandHandler.cpp handleCAP.cpp handleNumeric.cpp \
 					Channel.cpp \
-					handlePASS.cpp handleNICK.cpp handleUSER.cpp handlePING.cpp handlePONG.cpp handlePRIVMSG.cpp handleJOIN.cpp handleKICK.cpp\
+					handlePASS.cpp handleNICK.cpp handleUSER.cpp handlePING.cpp handlePONG.cpp handlePRIVMSG.cpp handleJOIN.cpp handleKICK.cpp handleMODE.cpp \
 					Utils.cpp \
 					Server.cpp
 

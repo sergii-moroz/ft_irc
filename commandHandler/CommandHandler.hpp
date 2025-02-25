@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/23 19:29:38 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/25 20:47:05 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -14,7 +14,7 @@
 # define COMMAND_HANDLER_HPP
 
 # include <iostream>
-
+#include "Channel.hpp"
 # include "Server.hpp"
 
 class Server;
@@ -45,6 +45,8 @@ class CommandHandler
 
 		void	handleJOIN(int, Command const &);
 		void	handleKICK(int, Command const &);
+
+		void	handleMODE(int, Command const &);
 
 		std::string	errNoSuchNick(std::string const &, std::string const &, std::string const &) const;		// 401
 		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;		// 431
