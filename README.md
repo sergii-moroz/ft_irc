@@ -38,5 +38,21 @@ git push -u origin branch3
 telnet localhost 4444
 PASS 123123
 NICK serg
-
 USER serg 0 * :serg Ivanov
+JOIN #test
+PRIVMSG serg :HELLO
+PRIVMSG #test :HELLO group
+KICK #test dim : spam
+
+telnet localhost 4444
+PASS 123123
+NICK dim
+USER dim 0 * :dim suh
+JOIN #test
+PRIVMSG dim :HELLO
+
+
+
+
+KICK #test dim :Spamming or any reason
+PRIVMSG dim : Hello
