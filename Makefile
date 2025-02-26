@@ -42,7 +42,7 @@ fclean: 			clean
 
 re: fclean all
 
-run:
+run: all
 					./ircserv 12345 pass
 
 .PHONY: all clean fclean re run
