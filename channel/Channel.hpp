@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:50:06 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/25 21:33:42 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/25 22:15:28 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -60,6 +60,12 @@ class Channel
 		               const std::string &message, int excludeFd);
 		void broadcastRaw(Server &server, const std::string &msg);
 
+		void addInvited(const std::string &nickname);
+    	bool isInvited(const std::string &nickname) const;
+    	void removeInvited(const std::string &nickname);
+		bool hasMode(int flag) const;
+
+
 		std::string	_name;
 		std::string	_topic;
 		char		_mode;  
@@ -71,8 +77,9 @@ class Channel
 		std::string        _password;
 		size_t             _userLimit;
 		std::set<std::string> _banList;
+		std::set<std::string> _invited;
 
-	private:
+
 		
 
 	

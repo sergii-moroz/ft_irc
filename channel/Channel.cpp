@@ -6,20 +6,20 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:51:11 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/25 20:56:57 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/25 22:20:55 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "Channel.hpp"
 #include "Server.hpp"
 #include <iostream>
-#include <cstdlib> // для std::atoi, если потребуется
+#include <cstdlib> 
 
 Channel::Channel() :
 	_name(""),
 	_topic("unknown"),
 	_mode(0),
-	_userLimit(0)  // 0 означает без ограничения
+	_userLimit(0) 
 {
 	std::cout << "Channel: Default constructor called" << std::endl;
 }
@@ -80,9 +80,6 @@ void Channel::setTopic(std::string const & topic)
 	_topic = topic;
 }
 
-// --------------------------------------------------
-// Работа с пользователями
-// --------------------------------------------------
 
 void Channel::addUser(int userFd)
 {
@@ -104,10 +101,6 @@ std::set<int> Channel::getUsers() const
 	return _userFds;
 }
 
-// --------------------------------------------------
-// Операторы канала
-// --------------------------------------------------
-
 void Channel::addOperator(int userFd)
 {
 	_operators.insert(userFd);
@@ -122,10 +115,6 @@ bool Channel::isOperator(int userFd) const
 {
 	return (_operators.find(userFd) != _operators.end());
 }
-
-// --------------------------------------------------
-// Параметры канала (пароль, лимит, бан-лист)
-// --------------------------------------------------
 
 void Channel::setPassword(const std::string &pass)
 {
@@ -158,9 +147,6 @@ bool Channel::isBanned(const std::string &nick) const
 	return (_banList.find(nick) != _banList.end());
 }
 
-// --------------------------------------------------
-// Широковещательные методы
-// --------------------------------------------------
 
 void Channel::broadcast(Server &server, const std::string &senderNick,
 	const std::string &message, int excludeFd)
@@ -183,4 +169,21 @@ void Channel::broadcastRaw(Server &server, const std::string &msg)
 	{
 		server.sendData(*it, msg);
 	}
+}
+
+
+
+void Channel::addInvited(const std::string &nickname) {
+    _invited.insert(nickname);
+
+	
+}
+bool Channel::isInvited(const std::string &nickname) const {
+    return (_invited.find(nickname) != _invited.end());
+}
+void Channel::removeInvited(const std::string &nickname) {
+    _invited.erase(nickname);
+}
+bool Channel::hasMode(int flag) const {
+    return ((_mode & flag) != 0);
 }
