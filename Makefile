@@ -43,6 +43,6 @@ fclean: 			clean
 re: fclean all
 
 run: all
-					./ircserv 12345 pass
+					./ircserv 12345 password
 
 .PHONY: all clean fclean re run
