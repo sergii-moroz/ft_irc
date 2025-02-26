@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 21:43:58 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/26 02:13:08 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/26 02:26:45 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -18,8 +18,6 @@ void CommandHandler::handleINVITE(int sd, Command const & cmd)
 	User &user = _server->getUser(sd);
 	std::string nick = user.getNickname();
 
-		
-		
 	if (cmd.isParamEmpty()
 		|| !cmd.hasParamAtPos(0, 0)  	
 		|| !cmd.hasParamAtPos(1, 0)) 	
@@ -31,7 +29,6 @@ void CommandHandler::handleINVITE(int sd, Command const & cmd)
 		return;
 	}
 
-		
 	std::string targetNick  = cmd.getParamAtPos(0, 0);
 	std::string channelName = cmd.getParamAtPos(1, 0);
 
