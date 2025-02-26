@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:21:11 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/25 20:51:21 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/25 21:48:42 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -83,6 +83,10 @@ void	CommandHandler::executeCommand(int sd, Command const & cmd)
 		std::make_pair("JOIN", &CommandHandler::handleJOIN),
 		std::make_pair("KICK", &CommandHandler::handleKICK),
 		std::make_pair("MODE", &CommandHandler::handleMODE),
+		std::make_pair("INVITE", &CommandHandler::handleINVITE),
+		std::make_pair("TOPIC", &CommandHandler::handleTOPIC),
+
+
 	};	
 	static const std::map<std::string, cmdFunc>	cmdMap(cmdArray, cmdArray + sizeof(cmdArray) / sizeof(cmdArray[0]));
 	std::map<std::string, cmdFunc>::const_iterator	it = cmdMap.find(cmd.getName());

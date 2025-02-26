@@ -6,7 +6,7 @@
 /*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 14:10:01 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/25 20:56:30 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/25 22:38:55 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -17,12 +17,13 @@
 #include "Command.hpp"
 #include <iostream>
 
+
 void CommandHandler::handleJOIN(int sd, Command const & cmd)
 {
 	User &user = _server->getUser(sd);
 	std::string nick = user.getNickname();
 
-	// 1. Проверка, что есть хотя бы один параметр (название канала)
+	// Проверка, что есть хотя бы один параметр (название канала)
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
 		std::string errorMsg = "461 " + nick + " JOIN :Not enough parameters\r\n";
@@ -36,60 +37,75 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 	bool newChannel = false;
 	if (!channel)
 	{
-		// Канала ещё нет, создаём
+		// Канала нет, создаём
 		_server->createChannel(channelName);
 		channel = _server->getChannelByName(channelName);
 		newChannel = true;
 	}
 
-	// 2. Проверяем бан-лист
+	// Проверяем ban-лист
 	if (channel->isBanned(nick))
 	{
-		std::string err = "474 " + nick + " " + channelName + " :You are banned from this channel\r\n";
+		std::string err = "474 " + nick + " " + channelName
+						  + " :You are banned from this channel\r\n";
 		_server->sendData(sd, err);
 		return;
 	}
 
-	// 3. Если пароль установлен (channel->getPassword() != ""), проверяем 2-й параметр JOIN
-	//    Пример: JOIN #channel key
+	// Invite-only режим (+i): проверяем, приглашён ли пользователь
+	if (channel->hasMode(MODE_INVITE_ONLY) && !channel->isInvited(nick))
+	{
+		// 473 — ERR_INVITEONLYCHAN
+		std::string err = "473 " + nick + " " + channelName
+						  + " :Cannot join channel (+i)\r\n";
+		_server->sendData(sd, err);
+		return;
+	}
+
+	// Если установлен пароль (+k), проверяем его
 	if (!channel->getPassword().empty())
 	{
-		// Проверим, передал ли пользователь пароль
 		std::string key;
 		if (cmd.hasParamAtPos(1, 0))
 			key = cmd.getParamAtPos(1, 0);
 
 		if (key != channel->getPassword())
 		{
-			std::string err = "475 " + nick + " " + channelName + " :Cannot join channel (+k)\r\n";
+			std::string err = "475 " + nick + " " + channelName
+							  + " :Cannot join channel (+k)\r\n";
 			_server->sendData(sd, err);
 			return;
 		}
 	}
 
-	// 4. Проверяем лимит, если он > 0
+	// Лимит (+l)
 	if (channel->getUserLimit() > 0
-	    && channel->getUsers().size() >= channel->getUserLimit())
+		&& channel->getUsers().size() >= channel->getUserLimit())
 	{
-		std::string err = "471 " + nick + " " + channelName + " :Cannot join channel (+l)\r\n";
+		std::string err = "471 " + nick + " " + channelName
+						  + " :Cannot join channel (+l)\r\n";
 		_server->sendData(sd, err);
 		return;
 	}
 
-	// 5. Добавляем пользователя, если он ещё не в канале
+	// Непосредственно присоединяем
 	if (!channel->hasUser(sd))
 	{
 		channel->addUser(sd);
 
-		// Если канал только что создан, делаем вошедшего оператором
+		// Если канал только что создан — делаем пользователя оператором
 		if (newChannel)
 			channel->addOperator(sd);
 
-		// Формируем JOIN-сообщение для самого пользователя
+		// Если пользователь был в списке приглашённых, удаляем его оттуда
+		if (channel->isInvited(nick))
+			channel->removeInvited(nick);
+
+		// Сообщаем самому пользователю о JOIN
 		std::string joinMsg = ":" + nick + " JOIN :" + channelName + "\r\n";
 		_server->sendData(sd, joinMsg);
 
-		// Можно уведомить других участников канала, что nick присоединился:
+		// Уведомляем остальных участников канала
 		std::string broadcastMsg = ":" + nick + " JOIN " + channelName + "\r\n";
 		channel->broadcastRaw(*_server, broadcastMsg);
 	}
