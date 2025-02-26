@@ -56,3 +56,11 @@ PRIVMSG dim :HELLO
 
 KICK #test dim :Spamming or any reason
 PRIVMSG dim : Hello
+
+
+NICK tester
+USER tester 0 * :Tester user
+JOIN #channel
+MODE #channel +i
+MODE #channel +t
+MODE #channel +k 123
