@@ -3,27 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   handleJOIN.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 14:10:01 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/26 02:20:16 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/27 14:22:12 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "CommandHandler.hpp"
-#include "Server.hpp"
-#include "User.hpp"
-#include "Channel.hpp"
-#include "Command.hpp"
-#include <iostream>
-
 
 void CommandHandler::handleJOIN(int sd, Command const & cmd)
 {
 	User &user = _server->getUser(sd);
 	std::string nick = user.getNickname();
 
-	
+
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
 		std::string errorMsg = "461 " + nick + " JOIN :Not enough parameters\r\n";
@@ -37,39 +31,30 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 	bool newChannel = false;
 	if (!channel)
 	{
-		
+
 		_server->createChannel(channelName);
 		channel = _server->getChannelByName(channelName);
 		newChannel = true;
 	}
 
-	
-	if (channel->isBanned(nick))
-	{
-		std::string err = "474 " + nick + " " + channelName
-						  + " :You are banned from this channel\r\n";
-		_server->sendData(sd, err);
-		return;
-	}
 
-	
-	if (channel->hasMode(MODE_INVITE_ONLY) && !channel->isInvited(nick))
+	if (channel->getMode(INVATE_MODE) && !channel->isInvitedUser(&user))
 	{
-		
+
 		std::string err = "473 " + nick + " " + channelName
 						  + " :Cannot join channel (+i)\r\n";
 		_server->sendData(sd, err);
 		return;
 	}
 
-	
-	if (!channel->getPassword().empty())
+
+	if (!channel->getKey().empty())
 	{
 		std::string key;
 		if (cmd.hasParamAtPos(1, 0))
 			key = cmd.getParamAtPos(1, 0);
 
-		if (key != channel->getPassword())
+		if (key != channel->getKey())
 		{
 			std::string err = "475 " + nick + " " + channelName
 							  + " :Cannot join channel (+k)\r\n";
@@ -78,7 +63,7 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 		}
 	}
 
-	
+
 	if (channel->getUserLimit() > 0
 		&& channel->getUsers().size() >= channel->getUserLimit())
 	{
@@ -88,25 +73,25 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 		return;
 	}
 
-	
-	if (!channel->hasUser(sd))
+
+	if (!channel->isUser(&user))
 	{
-		channel->addUser(sd);
+		channel->addUser(&user);
 
-		
+
 		if (newChannel)
-			channel->addOperator(sd);
+			channel->addOperator(&user);
 
-		
-		if (channel->isInvited(nick))
-			channel->removeInvited(nick);
 
-		
+		if (channel->isInvitedUser(&user))
+			channel->removeInvitedUser(&user);
+
+
 		std::string joinMsg = ":" + nick + " JOIN :" + channelName + "\r\n";
 		_server->sendData(sd, joinMsg);
 
-		
+
 		std::string broadcastMsg = ":" + nick + " JOIN " + channelName + "\r\n";
-		channel->broadcastRaw(*_server, broadcastMsg);
+		channel->broadcastAll(_server, broadcastMsg);
 	}
 }
