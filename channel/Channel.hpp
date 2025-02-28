@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:50:06 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/25 22:15:28 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/27 13:26:49 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -15,74 +15,72 @@
 
 # include <string>
 # include <set>
-# include <map>
 
+# include "Server.hpp"
 # include "User.hpp"
 
-// +i: Channel is invite-only; only invited users can join
-#define MODE_INVITE_ONLY  0x01  
-// +t: Topic lock; only channel operators can change the topic
-#define MODE_TOPIC_LOCK   0x02  
+# define INVATE_MODE	0
+# define TOPIC_MODE		1
+# define KEY_MODE		2
+# define LIMIT_MODE		3
 
 class Server;
+class User;
+
 class Channel
 {
 	public:
+		// Constructors and destructor
 		Channel();
 		Channel(std::string const &name);
 		Channel(Channel const &);
 		Channel &	operator=(Channel const &);
 		~Channel();
 
-		const std::string & getName() const;
-		std::string const &	getTopic() const;
-		void	setName(std::string const &);
-		void	setTopic(std::string const &);
-
-		void addUser(int userFd);
-		void removeUser(int userFd);
-		bool hasUser(int userFd) const;
-		std::set<int> getUsers() const;
-
-		void addOperator(int userFd);
-		void removeOperator(int userFd);
-		bool isOperator(int userFd) const;
-
-		void setPassword(const std::string &pass);
-		const std::string & getPassword() const;
-		void setUserLimit(size_t limit);
-		size_t getUserLimit() const;
-		void addBan(const std::string &nick);
-		void removeBan(const std::string &nick);
-		bool isBanned(const std::string &nick) const;
-
-		void broadcast(Server &server, const std::string &senderNick,
-		               const std::string &message, int excludeFd);
-		void broadcastRaw(Server &server, const std::string &msg);
-
-		void addInvited(const std::string &nickname);
-    	bool isInvited(const std::string &nickname) const;
-    	void removeInvited(const std::string &nickname);
-		bool hasMode(int flag) const;
+		// Getters
+		const std::string &		getName() const;
+		const std::string &		getTopic() const;
+		const std::string &		getKey() const;
+		bool					getMode(char) const;
+		size_t					getUserLimit() const;
+		std::set<User *>		getUsers() const;
+		std::set<User *>		getOperators() const;
+		std::set<User *>		getInvitedUsers() const;
 
 
-		std::string	_name;
-		std::string	_topic;
-		char		_mode;  
+		// Setters
+		void					setName(std::string const &);
+		void					setTopic(std::string const &);
+		void					setKey(std::string const &);
+		void					setUserLimit(size_t limit);
+		void					setMode(char mode, bool value);
+
+		// Resource operations
+		void 					addUser(User *user);
+		void 					removeUser(User *user);
+		void 					addOperator(User *user);
+		void 					removeOperator(User *user);
+		void 					addInvitedUser(User *user);
+		void 					removeInvitedUser(User *user);
+		bool 					isUser(User *user) const;
+		bool 					isOperator(User *user) const;
+		bool 					isInvitedUser(User *user) const;
+		std::string				getMembersList() const;
+
+		// Channel operations
+		void					broadcastAll(Server *server, std::string const &message) const;
+		void					broadcast(Server *server, std::string const &message, int excludeFd) const;
 
 
-		std::set<int> _userFds;
-		std::set<int> _operators;
-
-		std::string        _password;
-		size_t             _userLimit;
-		std::set<std::string> _banList;
-		std::set<std::string> _invited;
-
-
-		
-
-	
+	private:
+		std::string				_name;
+		std::string				_topic;
+		std::string				_key;
+		size_t					_userLimit;
+		char					_mode;
+		std::set<User *>		_users;
+		std::set<User *>		_operators;
+		std::set<User *>		_invited;
 };
 
 #endif
