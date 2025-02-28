@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleUSER.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 10:25:00 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/18 12:52:18 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/27 14:04:47 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -17,7 +17,7 @@ void	CommandHandler::handleUSER(int sd, const Command &cmd)
 	User &		user = _server->getUser(sd);
 	std::string	nickname = user.getNickname();
 
-	if (user.isRegistered())
+	if (user.getStatus(REGISTERED))
 	{
 		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_ALREADYREGISTERED (462)" << std::endl;
 		std::string	msg = errAlreadyRegistered(_server->getName(), nickname);
@@ -39,7 +39,8 @@ void	CommandHandler::handleUSER(int sd, const Command &cmd)
 
 		user.setUsername(username);
 		user.setRealname(realname);
-		user.setRegistered(true);
+		user.setStatus(USER, true);
+		// user.setStatus(REGISTERED, true);
 
 		std::cout << "INFO: " << nickname << "!" << username << "@" << _server->getName() << " [" << sd << "] registered with realname: "  << realname << std::endl;
 		std::cout << "INFO: " << user << std::endl;
