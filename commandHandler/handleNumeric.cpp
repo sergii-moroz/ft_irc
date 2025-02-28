@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 19:20:08 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/28 22:08:18 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -22,12 +22,46 @@ std::string	CommandHandler::rplWelcome(std::string const & serverName, std::stri
 }
 
 // ==========================================
+// RPL_NOTOPIC (331)
+// ==========================================
+
+std::string	CommandHandler::rplNoTopic(
+	std::string const & serverName,
+	std::string const & client,
+	std::string const & channelName) const
+{
+	return (":" + serverName + " 331 " + client + " " + channelName + " :No topic is set\r\n");
+}
+
+// ==========================================
+// RPL_TOPIC (332)
+// ==========================================
+
+std::string	CommandHandler::rplTopic(
+	std::string const & serverName,
+	std::string const & client,
+	std::string const & channelName,
+	std::string const & topic) const
+{
+	return (":" + serverName + " 332 " + client + " " + channelName + " :" + topic + "\r\n");
+}
+
+// ==========================================
 // ERR_NOSUCHNICK (401)
 // ==========================================
 
 std::string	CommandHandler::errNoSuchNick(std::string const & serverName, std::string const & client, std::string const & nick) const
 {
 	return (":" + serverName + " 401 " + client + " " + nick + " :No such nick/channel\r\n");
+}
+
+// ==========================================
+// ERR_NOSUCHCHANNEL (403)
+// ==========================================
+
+std::string	CommandHandler::errNoSuchChannel(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 403 " + client + " " + channel + " :No such channel\r\n");
 }
 
 // ==========================================
@@ -58,6 +92,15 @@ std::string	CommandHandler::errNicknameInUse(std::string const & serverName, std
 }
 
 // ==========================================
+// ERR_NOTONCHANNEL (442)
+// ==========================================
+
+std::string	CommandHandler::errNotOnChannel(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 442 " + client + " " + channel + " :You're not on that channel\r\n");
+}
+
+// ==========================================
 // ERR_NEEDMOREPARAMS (461)
 // ==========================================
 
@@ -82,4 +125,13 @@ std::string	CommandHandler::errAlreadyRegistered(std::string const & serverName,
 std::string	CommandHandler::errPasswdMismatch(std::string const & serverName) const
 {
 	return (":" + serverName + " 464 * :password incorect\r\n");
+}
+
+// ==========================================
+// ERR_CHANOPRIVSNEEDED (482)
+// ==========================================
+
+std::string	CommandHandler::errChanOpPrivsNeeded(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 482 " + client + " " + channel + " :You're not channel operator\r\n");
 }
