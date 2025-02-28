@@ -3,17 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   handleMODE.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 20:02:40 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/25 21:31:03 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/28 11:49:12 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "CommandHandler.hpp"
 
-
 void CommandHandler::handleMODE(int sd, Command const & cmd)
+// {
+// 	(void)sd;
+// 	(void)cmd;
+// }
 {
 	User &user = _server->getUser(sd);
 	std::string nick = user.getNickname();
@@ -36,7 +39,7 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 			return;
 		}
 
-		if (!channel->isOperator(sd)) {
+		if (!channel->isOperator(&user)) {
 			std::string msg = ":" + _server->getName() + " 482 " + nick
 							  + " " + channel->getName()
 							  + " :You're not channel operator\r\n";
@@ -59,49 +62,43 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 				}
 				switch (c) {
 					case 'i': // invite-only
-						if (add) {
-							channel->_mode |= MODE_INVITE_ONLY;
-						} else {
-							channel->_mode &= ~MODE_INVITE_ONLY;
-						}
+						channel->setMode(INVATE_MODE, add);
 						break;
 					case 't': // topic lock
-						if (add) {
-							channel->_mode |= MODE_TOPIC_LOCK;
-						} else {
-							channel->_mode &= ~MODE_TOPIC_LOCK;
-						}
+						channel->setMode(TOPIC_MODE, add);
 						break;
-					case 'k': // password
+					case 'k': // channel key (password)
+						channel->setMode(KEY_MODE, add);
 						if (add) {
 							if (cmd.hasParamAtPos(2, 0)) {
-								channel->_password = cmd.getParamAtPos(2, 0);
+								channel->setKey(cmd.getParamAtPos(2, 0));
 							}
 						} else {
-							channel->_password.clear();
+							channel->setKey("");
 						}
 						break;
 					case 'l': // user limit
+						channel->setMode(LIMIT_MODE, add);
 						if (add) {
 							if (cmd.hasParamAtPos(2, 0)) {
-								channel->_userLimit = std::atoi(cmd.getParamAtPos(2, 0).c_str());
+								channel->setUserLimit(std::atoi(cmd.getParamAtPos(2, 0).c_str()));
 							}
 						} else {
-							channel->_userLimit = 0; // 0 — without limit
+							channel->setUserLimit(0); // 0 — without limit
 						}
 						break;
-					case 'b': // ban
-						if (add) {
+					// case 'b': // ban
+					// 	if (add) {
 
-							if (cmd.hasParamAtPos(2, 0)) {
-								channel->_banList.insert(cmd.getParamAtPos(2, 0));
-							}
-						} else {
-							if (cmd.hasParamAtPos(2, 0)) {
-								channel->_banList.erase(cmd.getParamAtPos(2, 0));
-							}
-						}
-						break;
+					// 		if (cmd.hasParamAtPos(2, 0)) {
+					// 			channel->_banList.insert(cmd.getParamAtPos(2, 0));
+					// 		}
+					// 	} else {
+					// 		if (cmd.hasParamAtPos(2, 0)) {
+					// 			channel->_banList.erase(cmd.getParamAtPos(2, 0));
+					// 		}
+					// 	}
+					// 	break;
 					default:
 						break;
 				}
@@ -110,14 +107,23 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 			std::string broadcastMsg = ":" + nick + "!" + user.getUsername()
 				+ "@" + _server->getName()
 				+ " MODE " + target + " " + modes + "\r\n";
-			channel->broadcastRaw(*_server, broadcastMsg);
+			channel->broadcastAll(_server, broadcastMsg);
 		}
 		else {
 			std::string currentModes = "+";
-			if (channel->_mode & MODE_INVITE_ONLY) currentModes += "i";
-			if (channel->_mode & MODE_TOPIC_LOCK)  currentModes += "t";
+			if (channel->getMode(INVATE_MODE))
+				currentModes += "i";
+			if (channel->getMode(TOPIC_MODE))
+				currentModes += "t";
+			if (channel->getMode(KEY_MODE))
+				currentModes += "k";
+			if (channel->getMode(LIMIT_MODE))
+				currentModes += "l";
+			// if (channel->getMode(BAN_MODE))
+			// 	currentModes += "b";
 			std::string msg = ":" + _server->getName() + " 324 " + nick
-							  + " " + channel->getName() + " " + currentModes + "\r\n";
+							  + " " + channel->getName() + " " + currentModes
+							  + " " + channel->getKey() + " " + std::to_string(channel->getUserLimit()) + "\r\n";
 			_server->sendData(sd, msg);
 		}
 	}
@@ -127,4 +133,4 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 		_server->sendData(sd, msg);
 	}
 }
-	
+
