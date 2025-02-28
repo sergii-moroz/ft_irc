@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/26 02:24:43 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/28 17:29:17 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -14,7 +14,7 @@
 # define COMMAND_HANDLER_HPP
 
 # include <iostream>
-#include "Channel.hpp"
+# include "Channel.hpp"
 # include "Server.hpp"
 
 class Server;
@@ -50,6 +50,7 @@ class CommandHandler
 		void	handleINVITE(int sd, Command const &cmd);
 		void	handleTOPIC(int sd, Command const &cmd);
 
+		std::string	rplWelcome(std::string const &, std::string const &) const;	// 001
 		std::string	errNoSuchNick(std::string const &, std::string const &, std::string const &) const;		// 401
 		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;		// 431
 		std::string	errNicknameInUse(std::string const &, std::string const &, std::string const &) const;	// 433

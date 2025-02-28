@@ -123,7 +123,7 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 			// 	currentModes += "b";
 			std::string msg = ":" + _server->getName() + " 324 " + nick
 							  + " " + channel->getName() + " " + currentModes
-							  + " " + channel->getKey() + " " + std::to_string(channel->getUserLimit()) + "\r\n";
+							  + " " + channel->getKey() + "\r\n"; // + " " + std::itoa(channel->getUserLimit())
 			_server->sendData(sd, msg);
 		}
 	}
@@ -133,4 +133,3 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 		_server->sendData(sd, msg);
 	}
 }
-
