@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 21:12:41 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/28 22:08:18 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -19,6 +19,31 @@
 std::string	CommandHandler::rplWelcome(std::string const & serverName, std::string const & nickname) const
 {
 	return (":" + serverName + " 001 " + nickname + " :Welcome to the IRC Network, " + nickname + "!\r\n");
+}
+
+// ==========================================
+// RPL_NOTOPIC (331)
+// ==========================================
+
+std::string	CommandHandler::rplNoTopic(
+	std::string const & serverName,
+	std::string const & client,
+	std::string const & channelName) const
+{
+	return (":" + serverName + " 331 " + client + " " + channelName + " :No topic is set\r\n");
+}
+
+// ==========================================
+// RPL_TOPIC (332)
+// ==========================================
+
+std::string	CommandHandler::rplTopic(
+	std::string const & serverName,
+	std::string const & client,
+	std::string const & channelName,
+	std::string const & topic) const
+{
+	return (":" + serverName + " 332 " + client + " " + channelName + " :" + topic + "\r\n");
 }
 
 // ==========================================
@@ -100,4 +125,13 @@ std::string	CommandHandler::errAlreadyRegistered(std::string const & serverName,
 std::string	CommandHandler::errPasswdMismatch(std::string const & serverName) const
 {
 	return (":" + serverName + " 464 * :password incorect\r\n");
+}
+
+// ==========================================
+// ERR_CHANOPRIVSNEEDED (482)
+// ==========================================
+
+std::string	CommandHandler::errChanOpPrivsNeeded(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 482 " + client + " " + channel + " :You're not channel operator\r\n");
 }

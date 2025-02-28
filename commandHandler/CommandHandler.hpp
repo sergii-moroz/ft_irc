@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 21:12:59 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/28 22:09:20 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -50,16 +50,19 @@ class CommandHandler
 		void	handleINVITE(int sd, Command const &cmd);
 		void	handleTOPIC(int sd, Command const &cmd);
 
-		std::string	rplWelcome(std::string const &, std::string const &) const;	// 001
-		std::string	errNoSuchNick(std::string const &, std::string const &, std::string const &) const;		// 401
-		std::string	errNoSuchChannel(std::string const &, std::string const &, std::string const &) const;	// 403
-		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;		// 431
-		std::string	errErroneusNickName(std::string const &, std::string const &, std::string const &) const;	// 432
-		std::string	errNicknameInUse(std::string const &, std::string const &, std::string const &) const;	// 433
-		std::string	errNotOnChannel(std::string const &, std::string const &, std::string const &) const;	// 442
-		std::string	errNeedMoreParams(std::string const &, std::string const &) const;		// 461
-		std::string	errAlreadyRegistered(std::string const &, std::string const &) const;	// 462
-		std::string	errPasswdMismatch(std::string const &) const; 							// 464
+		std::string	rplWelcome(std::string const &, std::string const &) const;											// 001
+		std::string	rplNoTopic(std::string const &, std::string const &, std::string const &) const;					// 331
+		std::string	rplTopic(std::string const &, std::string const &, std::string const &, std::string const &) const;	// 332
+		std::string	errNoSuchNick(std::string const &, std::string const &, std::string const &) const;					// 401
+		std::string	errNoSuchChannel(std::string const &, std::string const &, std::string const &) const;				// 403
+		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;									// 431
+		std::string	errErroneusNickName(std::string const &, std::string const &, std::string const &) const;			// 432
+		std::string	errNicknameInUse(std::string const &, std::string const &, std::string const &) const;				// 433
+		std::string	errNotOnChannel(std::string const &, std::string const &, std::string const &) const;				// 442
+		std::string	errNeedMoreParams(std::string const &, std::string const &) const;									// 461
+		std::string	errAlreadyRegistered(std::string const &, std::string const &) const;								// 462
+		std::string	errPasswdMismatch(std::string const &) const;														// 464
+		std::string	errChanOpPrivsNeeded(std::string const &, std::string const &, std::string const &) const;			// 482
 };
 
 #endif

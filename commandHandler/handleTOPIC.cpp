@@ -3,27 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   handleTOPIC.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 22:39:34 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/27 14:33:34 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/28 22:06:51 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "CommandHandler.hpp"
 
-
 void CommandHandler::handleTOPIC(int sd, Command const & cmd)
 {
-	User &user = _server->getUser(sd);
-	std::string nick = user.getNickname();
+	User &		user = _server->getUser(sd);
+	std::string	nickname = user.getNickname();
 
+	// Guard REGISTERED
+	if (!user.getStatus(REGISTERED))
+	{
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] Command \"" << cmd.getName() << "\" available only for registered users." << std::endl;
+		// optional send error here
+		return;
+	}
 
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
-
-		std::string errMsg = ":" + _server->getName() + " 461 "
-							 + nick + " TOPIC :Not enough parameters\r\n";
+		std::cerr << "ERROR: " <<  nickname << " [" << sd << "] ERR_NEEDMOREPARAMS (461) - " << cmd.getName() << std::endl;
+		std::string	errMsg = errNeedMoreParams(_server->getName(), cmd.getName());
 		_server->sendData(sd, errMsg);
 		return;
 	}
@@ -33,69 +38,50 @@ void CommandHandler::handleTOPIC(int sd, Command const & cmd)
 
 	if (!channel)
 	{
-
-		std::string errMsg = ":" + _server->getName() + " 403 "
-							 + nick + " " + channelName
-							 + " :No such channel\r\n";
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NOSUCHCHANNEL (403) - " << cmd.getName() << std::endl;
+		std::string	errMsg = errNoSuchChannel(_server->getName(), nickname, channelName);
 		_server->sendData(sd, errMsg);
 		return;
 	}
-
 
 	if (!channel->isUser(&user))
 	{
-
-		std::string errMsg = ":" + _server->getName() + " 442 "
-							 + nick + " " + channelName
-							 + " :You're not on that channel\r\n";
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NOTONCHANNEL (442) - " << cmd.getName() << std::endl;
+		std::string	errMsg = errNotOnChannel(_server->getName(), nickname, channelName);
 		_server->sendData(sd, errMsg);
 		return;
 	}
 
+	std::string	topic = channel->getTopic();
+	std::string	newTopic = cmd.getTail();
+	std::string	msg;
 
-	if (cmd.getParameters().size() < 2 || !cmd.hasParamAtPos(1, 0))
+	if (newTopic.length())
 	{
+		// setTopic
 
-		std::string currentTopic = channel->getTopic();
-		if (currentTopic.empty() || currentTopic == "unknown")
+		if (channel->getMode(TOPIC_MODE) && !channel->isOperator(&user))
 		{
-
-			std::string msg = ":" + _server->getName() + " 331 "
-							  + nick + " " + channelName
-							  + " :No topic is set\r\n";
-			_server->sendData(sd, msg);
-		}
-		else
-		{
-
-			std::string msg = ":" + _server->getName() + " 332 "
-							  + nick + " " + channelName
-							  + " :" + currentTopic + "\r\n";
-			_server->sendData(sd, msg);
-		}
-	}
-	else
-	{
-
-		if ((channel->getMode(TOPIC_MODE)) && !channel->isOperator(&user))
-		{
-
-			std::string errMsg = ":" + _server->getName() + " 482 "
-								 + nick + " " + channelName
-								 + " :You're not channel operator\r\n";
+			std::string errMsg = errChanOpPrivsNeeded(_server->getName(), nickname, channelName);
 			_server->sendData(sd, errMsg);
 			return;
 		}
 
-
-		std::string newTopic = cmd.getParamAtPos(1, 0);
+		std::cout << "INFO: " << nickname << " [" << sd << "] set \"" << newTopic << "\" as new topic for " << channelName << std::endl;
 		channel->setTopic(newTopic);
-
-
-		std::string topicMsg = ":" + nick + "!" + user.getUsername()
-							   + "@" + _server->getName()
-							   + " TOPIC " + channelName
-							   + " :" + newTopic + "\r\n";
-		channel->broadcastAll(_server, topicMsg);
+		msg = ":" + nickname + "!" + user.getUsername()
+			+ "@" + _server->getName()
+			+  " TOPIC " + channelName + " :" + newTopic + "\r\n";
+		channel->broadcastAll(_server, msg);
+	}
+	else
+	{
+		// get topic
+		std::cout << "INFO: " << nickname << " [" << sd << "] request topic of " << channelName << " topic" << std::endl;
+		if (topic.length() == 1 && topic[0] == ' ')
+			msg = rplNoTopic(_server->getName(), nickname, channelName);
+		else
+			msg = rplTopic(_server->getName(), nickname, channelName, topic);
+		_server->sendData(sd, msg);
 	}
 }
