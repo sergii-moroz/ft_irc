@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/23 14:58:39 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/27 13:32:28 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -35,7 +35,8 @@
 # define PASS	"42Heilbronn"
 # define NAME	"irc.42heilbron.de"
 
-
+class User;
+class Channel;
 
 class Server
 {
@@ -85,8 +86,7 @@ class Server
 		std::vector<struct pollfd>	_fds;
 		static bool					_forever;
 		std::string					_name;
-
-		std::map<std::string, Channel>	_channels;
+		std::map<std::string, Channel *>	_channels;
 };
 
 #endif
