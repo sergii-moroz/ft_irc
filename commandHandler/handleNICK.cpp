@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   handleNICK.cpp                                     :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 17:05:14 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/16 19:51:07 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/28 20:36:11 by smoroz           ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "CommandHandler.hpp"
 
@@ -16,6 +16,14 @@ void	CommandHandler::handleNICK(int sd, Command const & cmd)
 {
 	User &		user = _server->getUser(sd);
 	std::string	nickname = user.getNickname();
+
+	// Guard password
+	if (!user.getStatus(PASSWORD))
+	{
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] MUST send a PASS command before sending the NICK / USER combination." << std::endl;
+		// optional send error here
+		return;
+	}
 
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
@@ -26,7 +34,16 @@ void	CommandHandler::handleNICK(int sd, Command const & cmd)
 	else
 	{
 		std::string	newNickname = cmd.getParamAtPos(0, 0);
-		// check here if new nickname is valid
+
+		// check new nickname is valid
+		if (!Utils::isValidNickname(newNickname, 6))
+		{
+			std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_ERRONEUSNICKNAME (432)" << std::endl;
+			std::string	msg = errErroneusNickName(_server->getName(), nickname, newNickname);
+			_server->sendData(sd, msg);
+			return ;
+		}
+
 		User	*found = _server->getUserByNickname(newNickname);
 
 		if (!found)
@@ -35,6 +52,15 @@ void	CommandHandler::handleNICK(int sd, Command const & cmd)
 			user.setNickname(newNickname);
 			std::string	msg = ":" + nickname + " NICK :" + newNickname + "\r\n";
 			_server->sendData(sd, msg);
+			user.setStatus(NICK, true);
+
+			// Registration is completed
+			if (!user.getStatus(REGISTERED) && user.getStatus() == END_REG)
+			{
+				user.setStatus(REGISTERED, true);
+				std::string	msg = rplWelcome(_server->getName(), nickname);
+				_server->sendData(sd, msg);
+			}
 		}
 		else
 		{

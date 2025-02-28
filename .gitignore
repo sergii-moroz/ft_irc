@@ -34,7 +34,5 @@
 *.txt
 ircserv
 .vscode
-token/token_main.cpp
-lexer/lexer_main.cpp
 *.sh
 *.vscode

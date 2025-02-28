@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   handleNumeric.cpp                                  :+:      :+:    :+:   */
@@ -6,11 +6,20 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/17 16:05:28 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/28 19:20:08 by smoroz           ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "CommandHandler.hpp"
+
+// ==========================================
+// RPL_WELCOME (001)
+// ==========================================
+
+std::string	CommandHandler::rplWelcome(std::string const & serverName, std::string const & nickname) const
+{
+	return (":" + serverName + " 001 " + nickname + " :Welcome to the IRC Network, " + nickname + "!\r\n");
+}
 
 // ==========================================
 // ERR_NOSUCHNICK (401)
@@ -28,6 +37,15 @@ std::string	CommandHandler::errNoSuchNick(std::string const & serverName, std::s
 std::string	CommandHandler::errNoNicknameGiven(std::string const & serverName, std::string const & client) const
 {
 	return (":" + serverName + " 431 " + client + " :No nickname given\r\n");
+}
+
+// ==========================================
+// ERR_ERRONEUSNICKNAME (432)
+// ==========================================
+
+std::string	CommandHandler::errErroneusNickName(std::string const & serverName, std::string const & client, std::string const & nick) const
+{
+	return (":" + serverName + " 432 " + client + " " + nick + " :Erroneus nickname\r\n");
 }
 
 // ==========================================
