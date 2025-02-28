@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handlePRIVMSG.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 13:23:13 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/23 19:28:49 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/27 14:08:27 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -23,10 +23,10 @@ void CommandHandler::handlePRIVMSG(int sd, Command const &cmd)
 		_server->sendData(sd, msg);
 		return;
 	}
-	
+
 
 	std::string target  = cmd.getParamAtPos(0, 0);
-	std::string message = cmd.getTail();  
+	std::string message = cmd.getTail();
 
 	if (!target.empty() && target[0] == '#')
 	{
@@ -34,13 +34,13 @@ void CommandHandler::handlePRIVMSG(int sd, Command const &cmd)
 		if (!channel)
 		{
 			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHNICK/CHANNEL (401)" << std::endl;
-			std::string errMsg = ":" + _server->getName() + " 401 " + senderNick + " " + target 
+			std::string errMsg = ":" + _server->getName() + " 401 " + senderNick + " " + target
 							   + " :No such nick/channel\r\n";
 			_server->sendData(sd, errMsg);
 			return;
 		}
 
-		if (!channel->hasUser(sd))
+		if (!channel->isUser(&sender))
 		{
 			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOTONCHANNEL (442)" << std::endl;
 			std::string errMsg = ":" + _server->getName() + " 442 " + senderNick + " " + target
@@ -49,7 +49,7 @@ void CommandHandler::handlePRIVMSG(int sd, Command const &cmd)
 			return;
 		}
 
-		channel->broadcast(*_server, senderNick, message, sd);
+		channel->broadcast(_server, message, sd);
 	}
 	else
 	{
