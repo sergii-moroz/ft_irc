@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   handlePASS.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 15:52:56 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/16 15:52:56 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/27 14:02:26 by olanokhi         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "CommandHandler.hpp"
 
@@ -27,7 +27,7 @@ void	CommandHandler::handlePASS(int sd, Command const & cmd)
 	else if (cmd.hasParamAtPos(_server->getPass(), 0, 0))
 	{
 		std::cout << "INFO: " + nickname + " [" << sd << "] password accepted" << std::endl;
-		user.setPassOK(true);
+		user.setStatus(PASSWORD, true);
 	}
 	else
 	{
