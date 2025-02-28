@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleKICK.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 13:23:38 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/23 19:36:16 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/27 14:25:29 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -20,30 +20,30 @@ void CommandHandler::handleKICK(int sd, Command const & cmd)
 	User &sender	   = _server->getUser(sd);
 	std::string senderNick = sender.getNickname();
 
-		
-		
-		
-	if (cmd.isParamEmpty() 
-		|| !cmd.hasParamAtPos(0, 0)  	
-		|| !cmd.hasParamAtPos(1, 0)) 	
+
+
+
+	if (cmd.isParamEmpty()
+		|| !cmd.hasParamAtPos(0, 0)
+		|| !cmd.hasParamAtPos(1, 0))
 	{
-			
+
 		std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NEEDMOREPARAMS (461)" << std::endl;
 		std::string msg = errNeedMoreParams(_server->getName(), cmd.getName());
 		_server->sendData(sd, msg);
 		return;
 	}
 
-		
-	std::string channelName = cmd.getParamAtPos(0, 0); 	
-	std::string targetNick  = cmd.getParamAtPos(1, 0); 	
 
-		
+	std::string channelName = cmd.getParamAtPos(0, 0);
+	std::string targetNick  = cmd.getParamAtPos(1, 0);
+
+
 	std::string reason = cmd.getTail();
 	if (reason.empty())
 		reason = "Kicked";
 
-		
+
 	Channel *channel = _server->getChannelByName(channelName);
 	if (!channel)
 	{
@@ -55,8 +55,8 @@ void CommandHandler::handleKICK(int sd, Command const & cmd)
 		return;
 	}
 
-		
-	if (!channel->hasUser(sd))
+
+	if (!channel->isUser(&sender))
 	{
 		std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOTONCHANNEL (442)" << std::endl;
 		std::string errMsg = ":" + _server->getName() + " 442 "
@@ -66,7 +66,6 @@ void CommandHandler::handleKICK(int sd, Command const & cmd)
 		return;
 	}
 
-		
 	User *targetUser = _server->getUserByNickname(targetNick);
 	if (!targetUser)
 	{
@@ -76,9 +75,7 @@ void CommandHandler::handleKICK(int sd, Command const & cmd)
 		return;
 	}
 
-		
-	int targetFd = targetUser->getFd();
-	if (!channel->hasUser(targetFd))
+	if (!channel->isUser(targetUser))
 	{
 		std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_USERNOTINCHANNEL (441)" << std::endl;
 		std::string errMsg = ":" + _server->getName() + " 441 "
@@ -88,21 +85,14 @@ void CommandHandler::handleKICK(int sd, Command const & cmd)
 		return;
 	}
 
-		
-		
+	channel->removeUser(targetUser);
 
-		
-	channel->removeUser(targetFd);
-
-		
-		
-	std::string kickMsg = ":" + senderNick + " KICK " 
-						+ channelName + " " + targetNick 
+	std::string kickMsg = ":" + senderNick + " KICK "
+						+ channelName + " " + targetNick
 						+ " :" + reason + "\r\n";
 
-		
-	channel->broadcastRaw(*_server, kickMsg);
+	channel->broadcastAll(_server, kickMsg);
 
-		
+	int targetFd = targetUser->getFd();
 	_server->sendData(targetFd, kickMsg);
 }
