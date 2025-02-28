@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/23 14:58:59 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/02/27 14:47:34 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -43,11 +43,11 @@ Server::~Server()
 	std::cout << "Server: Destructor called" << std::endl;
 	closeAllSockets();
 
-	// for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-	// {
-	// 	delete it->second;
-	// }
-	// _channels.clear();
+	for (std::map<std::string, Channel*>::iterator it = _channels.begin();
+         it != _channels.end(); ++it) {
+        delete it->second;
+    }
+    _channels.clear();
 }
 
 // ==========================================
@@ -351,15 +351,15 @@ void	Server::usage(void)
 
 Channel	*Server::getChannelByName(std::string const &channelName)
 {
-	std::map<std::string, Channel>::iterator it = _channels.find(channelName);
+	std::map<std::string, Channel *>::const_iterator it = _channels.find(channelName);
 	if (it != _channels.end())
-		return (&(it->second));
+		return (it->second);
 	return (NULL);
 }
 
 void	Server::createChannel(std::string const & channelName)
 {
-	_channels[channelName] = Channel(channelName);
+	_channels[channelName] = new Channel(channelName);
 }
 
 // Channel * Server::findOrCreateChannel(std::string const &channelName)
