@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handleUSER.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 10:25:00 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/27 14:04:47 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/28 20:39:34 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -17,6 +17,15 @@ void	CommandHandler::handleUSER(int sd, const Command &cmd)
 	User &		user = _server->getUser(sd);
 	std::string	nickname = user.getNickname();
 
+	// Guard Password
+	if (!user.getStatus(PASSWORD))
+	{
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] MUST send a PASS command before sending the NICK / USER combination." << std::endl;
+		// optional send error here
+		return;
+	}
+
+	// Guard Registered
 	if (user.getStatus(REGISTERED))
 	{
 		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_ALREADYREGISTERED (462)" << std::endl;
@@ -40,11 +49,16 @@ void	CommandHandler::handleUSER(int sd, const Command &cmd)
 		user.setUsername(username);
 		user.setRealname(realname);
 		user.setStatus(USER, true);
-		// user.setStatus(REGISTERED, true);
+
+		// Registration is completed
+		if (!user.getStatus(REGISTERED) && user.getStatus() == END_REG)
+		{
+			user.setStatus(REGISTERED, true);
+			std::string	msg = rplWelcome(_server->getName(), nickname);
+			_server->sendData(sd, msg);
+		}
 
 		std::cout << "INFO: " << nickname << "!" << username << "@" << _server->getName() << " [" << sd << "] registered with realname: "  << realname << std::endl;
-		std::cout << "INFO: " << user << std::endl;
-		std::string	msg = ":localhost 001 root :Welcome to the IRC Network, <nickname>!<user>@<host>\r\n";
-		_server->sendData(sd, msg);
+		std::cout << "INFO: " << user << std::endl; // <-- Debug
 	}
 }

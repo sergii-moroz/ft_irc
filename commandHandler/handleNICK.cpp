@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 17:05:14 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 19:27:44 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/28 20:36:11 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -52,6 +52,15 @@ void	CommandHandler::handleNICK(int sd, Command const & cmd)
 			user.setNickname(newNickname);
 			std::string	msg = ":" + nickname + " NICK :" + newNickname + "\r\n";
 			_server->sendData(sd, msg);
+			user.setStatus(NICK, true);
+
+			// Registration is completed
+			if (!user.getStatus(REGISTERED) && user.getStatus() == END_REG)
+			{
+				user.setStatus(REGISTERED, true);
+				std::string	msg = rplWelcome(_server->getName(), nickname);
+				_server->sendData(sd, msg);
+			}
 		}
 		else
 		{
