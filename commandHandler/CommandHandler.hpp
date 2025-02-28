@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 17:29:17 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/28 19:20:19 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -53,6 +53,7 @@ class CommandHandler
 		std::string	rplWelcome(std::string const &, std::string const &) const;	// 001
 		std::string	errNoSuchNick(std::string const &, std::string const &, std::string const &) const;		// 401
 		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;		// 431
+		std::string	errErroneusNickName(std::string const &, std::string const &, std::string const &) const;	// 432
 		std::string	errNicknameInUse(std::string const &, std::string const &, std::string const &) const;	// 433
 		std::string	errNeedMoreParams(std::string const &, std::string const &) const;		// 461
 		std::string	errAlreadyRegistered(std::string const &, std::string const &) const;	// 462

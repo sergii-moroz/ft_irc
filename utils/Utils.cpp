@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   Utils.cpp                                          :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 15:00:16 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/17 16:01:54 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/28 19:14:30 by smoroz           ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "Utils.hpp"
 
@@ -158,4 +158,22 @@ std::string	Utils::validateUsername(std::string const & username, size_t length)
 	else if (slen > length)
 		return (username.substr(0, length));
 	return (username);
+}
+
+bool	Utils::isValidNickname(std::string const & nickname, size_t length)
+{
+	static std::string	symbols = "0123456789# ";
+
+	if (nickname.empty())
+		return (false);
+
+	size_t	slen = nickname.length();
+	if (slen < 3 || slen > length)
+		return (false);
+
+	size_t		pos = symbols.find(nickname[0]);
+	if (pos != std::string::npos)
+		return (false);
+
+	return (true);
 }

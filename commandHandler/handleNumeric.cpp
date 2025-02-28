@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 17:23:15 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/28 19:20:08 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -37,6 +37,15 @@ std::string	CommandHandler::errNoSuchNick(std::string const & serverName, std::s
 std::string	CommandHandler::errNoNicknameGiven(std::string const & serverName, std::string const & client) const
 {
 	return (":" + serverName + " 431 " + client + " :No nickname given\r\n");
+}
+
+// ==========================================
+// ERR_ERRONEUSNICKNAME (432)
+// ==========================================
+
+std::string	CommandHandler::errErroneusNickName(std::string const & serverName, std::string const & client, std::string const & nick) const
+{
+	return (":" + serverName + " 432 " + client + " " + nick + " :Erroneus nickname\r\n");
 }
 
 // ==========================================
