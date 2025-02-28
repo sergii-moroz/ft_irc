@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handlePRIVMSG.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 13:23:13 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/27 14:08:27 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/02/28 21:33:10 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -14,58 +14,66 @@
 
 void CommandHandler::handlePRIVMSG(int sd, Command const &cmd)
 {
-	User &sender = _server->getUser(sd);
-	std::string senderNick = sender.getNickname();
+	User &		sender = _server->getUser(sd);
+	std::string	senderNick = sender.getNickname();
+
+	// Guard REGISTERED
+	if (!sender.getStatus(REGISTERED))
+	{
+		std::cerr << "ERROR: " << senderNick << " [" << sd << "] Command \"" << cmd.getName() << "\" available only for registered users." << std::endl;
+		// optional send error here
+		return ;
+	}
+
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
 		std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NEEDMOREPARAMS (461)" << std::endl;
 		std::string msg = errNeedMoreParams(_server->getName(), cmd.getName());
 		_server->sendData(sd, msg);
-		return;
+		return ;
 	}
 
-
-	std::string target  = cmd.getParamAtPos(0, 0);
-	std::string message = cmd.getTail();
+	std::string	target = cmd.getParamAtPos(0, 0);
 
 	if (!target.empty() && target[0] == '#')
 	{
-		Channel *channel = _server->getChannelByName(target);
+		Channel	*channel = _server->getChannelByName(target);
 		if (!channel)
 		{
-			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHNICK/CHANNEL (401)" << std::endl;
-			std::string errMsg = ":" + _server->getName() + " 401 " + senderNick + " " + target
-							   + " :No such nick/channel\r\n";
+			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHCHANNEL (403)" << std::endl;
+			std::string	errMsg = errNoSuchChannel(_server->getName(), senderNick, target);
 			_server->sendData(sd, errMsg);
-			return;
+			return ;
 		}
 
 		if (!channel->isUser(&sender))
 		{
 			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOTONCHANNEL (442)" << std::endl;
-			std::string errMsg = ":" + _server->getName() + " 442 " + senderNick + " " + target
-							   + " :You're not on that channel\r\n";
+			std::string	errMsg = errNotOnChannel(_server->getName(), senderNick, target);
 			_server->sendData(sd, errMsg);
-			return;
+			return ;
 		}
 
-		channel->broadcast(_server, message, sd);
+		std::string	msg = ":" + senderNick + "!" + sender.getUsername()
+			+ "@" + _server->getName()
+			+ " PRIVMSG " + target + " :" + cmd.getTail() + "\r\n";
+		channel->broadcast(_server, msg, sd);
 	}
 	else
 	{
-		User *recipient = _server->getUserByNickname(target);
+		User	*recipient = _server->getUserByNickname(target);
 		if (!recipient)
 		{
 			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHNICK (401)" << std::endl;
-			std::string msg = errNoSuchNick(_server->getName(), senderNick, target);
+			std::string	msg = errNoSuchNick(_server->getName(), senderNick, target);
 			_server->sendData(sd, msg);
 			return;
 		}
 
-		int recipientSD = recipient->getFd();
-		std::string msg = ":" + senderNick + "!" + sender.getUsername()
+		int	recipientSD = recipient->getFd();
+		std::string	msg = ":" + senderNick + "!" + sender.getUsername()
 						+ "@" + _server->getName()
-						+ " PRIVMSG " + target + " :" + message + "\r\n";
+						+ " PRIVMSG " + target + " :" + cmd.getTail() + "\r\n";
 		_server->sendData(recipientSD, msg);
 	}
 }

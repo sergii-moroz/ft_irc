@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 19:20:08 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/02/28 21:12:41 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -28,6 +28,15 @@ std::string	CommandHandler::rplWelcome(std::string const & serverName, std::stri
 std::string	CommandHandler::errNoSuchNick(std::string const & serverName, std::string const & client, std::string const & nick) const
 {
 	return (":" + serverName + " 401 " + client + " " + nick + " :No such nick/channel\r\n");
+}
+
+// ==========================================
+// ERR_NOSUCHCHANNEL (403)
+// ==========================================
+
+std::string	CommandHandler::errNoSuchChannel(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 403 " + client + " " + channel + " :No such channel\r\n");
 }
 
 // ==========================================
@@ -55,6 +64,15 @@ std::string	CommandHandler::errErroneusNickName(std::string const & serverName, 
 std::string	CommandHandler::errNicknameInUse(std::string const & serverName, std::string const & client, std::string const & nick) const
 {
 	return (":" + serverName + " 433 " + client + " " + nick + " :Nickname is already in use\r\n");
+}
+
+// ==========================================
+// ERR_NOTONCHANNEL (442)
+// ==========================================
+
+std::string	CommandHandler::errNotOnChannel(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 442 " + client + " " + channel + " :You're not on that channel\r\n");
 }
 
 // ==========================================
