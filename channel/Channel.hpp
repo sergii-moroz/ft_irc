@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:50:06 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/27 13:26:49 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/01 20:06:00 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -19,7 +19,7 @@
 # include "Server.hpp"
 # include "User.hpp"
 
-# define INVATE_MODE	0
+# define INVITE_MODE	0
 # define TOPIC_MODE		1
 # define KEY_MODE		2
 # define LIMIT_MODE		3
@@ -66,6 +66,8 @@ class Channel
 		bool 					isOperator(User *user) const;
 		bool 					isInvitedUser(User *user) const;
 		std::string				getMembersList() const;
+		std::string				getModeList() const;
+		std::string				getModeArgs() const;
 
 		// Channel operations
 		void					broadcastAll(Server *server, std::string const &message) const;

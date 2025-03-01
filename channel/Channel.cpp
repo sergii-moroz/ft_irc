@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:51:11 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/27 13:23:53 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/01 20:06:14 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -169,10 +169,43 @@ std::string Channel::getMembersList() const
 	std::string membersList;
 	for (std::set<User *>::const_iterator it = _users.begin(); it != _users.end(); it++)
 	{
+		if (isOperator(*it))
+			membersList += "@";
 		membersList += (*it)->getNickname();
 		membersList += " ";
 	}
 	return (membersList);
+}
+
+std::string	Channel::getModeList() const
+{
+	static std::string	modies = "itkl";
+	std::string	modiesList = "+";
+	for(size_t i=0; i<=LIMIT_MODE; ++i)
+	{
+		if (getMode(i))
+			modiesList += modies[i];
+	}
+	return (modiesList);
+}
+
+std::string	Channel::getModeArgs() const
+{
+	std::ostringstream os;
+	std::string args;
+
+	if (getMode(KEY_MODE))
+		args += getKey();
+
+	if (getMode(LIMIT_MODE))
+	{
+		os << getUserLimit();
+		if (!args.empty())
+			args += " ";
+		args += os.str();
+	}
+
+	return (args);
 }
 
 // Channel operations
