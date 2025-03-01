@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 22:08:18 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 15:41:24 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -44,6 +44,28 @@ std::string	CommandHandler::rplTopic(
 	std::string const & topic) const
 {
 	return (":" + serverName + " 332 " + client + " " + channelName + " :" + topic + "\r\n");
+}
+
+// ==========================================
+// RPL_NAMREPLY (353)
+// ==========================================
+
+std::string	CommandHandler::rplNamReply(
+	std::string const & serverName,
+	std::string const & client,
+	std::string const & channelName,
+	std::string const & members) const
+{
+	return (":" + serverName + " 353 " + client + " = " + channelName + " :" + members + "\r\n");
+}
+
+// ==========================================
+// RPL_ENDOFNAMES (366)
+// ==========================================
+
+std::string	CommandHandler::rplEndOfNames(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 366 " + client + " " + channel + " :End of /NAMES list\r\n");
 }
 
 // ==========================================

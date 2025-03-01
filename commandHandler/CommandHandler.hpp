@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 22:09:20 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 15:42:21 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -53,6 +53,8 @@ class CommandHandler
 		std::string	rplWelcome(std::string const &, std::string const &) const;											// 001
 		std::string	rplNoTopic(std::string const &, std::string const &, std::string const &) const;					// 331
 		std::string	rplTopic(std::string const &, std::string const &, std::string const &, std::string const &) const;	// 332
+		std::string	rplNamReply(std::string const &, std::string const &, std::string const &, std::string const &) const;	// 353
+		std::string	rplEndOfNames(std::string const &, std::string const &, std::string const &) const;					// 366
 		std::string	errNoSuchNick(std::string const &, std::string const &, std::string const &) const;					// 401
 		std::string	errNoSuchChannel(std::string const &, std::string const &, std::string const &) const;				// 403
 		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;									// 431
