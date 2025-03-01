@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 14:10:01 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 15:52:50 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 20:51:15 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -56,22 +56,21 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 	// 	return;
 	// }
 
+	if (channel->getMode(KEY_MODE))
+	{
+		std::string	key;
+		if (cmd.hasParamAtPos(1, 0))
+			key = cmd.getParamAtPos(1, 0);
 
-	// if (!channel->getKey().empty())
-	// {
-	// 	std::string key;
-	// 	if (cmd.hasParamAtPos(1, 0))
-	// 		key = cmd.getParamAtPos(1, 0);
-
-	// 	if (key != channel->getKey())
-	// 	{
-	// 		std::string err = "475 " + nick + " " + channelName
-	// 						  + " :Cannot join channel (+k)\r\n";
-	// 		_server->sendData(sd, err);
-	// 		return;
-	// 	}
-	// }
-
+		if (key != channel->getKey())
+		{
+			std::cerr << "ERROR: " <<  nickname << " [" << sd << "] ERR_BADCHANNELKEY (475) - the channel \"" << channelName
+				<< "\" requires a key and the key was either incorrect or not supplied." << std::endl;
+			std::string	msg = errBadChannelKey(_server->getName(), nickname, channelName);
+			_server->sendData(sd, msg);
+			return ;
+		}
+	}
 
 	// if (channel->getUserLimit() > 0
 	// 	&& channel->getUsers().size() >= channel->getUserLimit())
@@ -108,11 +107,9 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 		// Send the List of Users in the Channel
 		// The server must send a list of all current members in #channel to only the joining user:
 		msg = rplNamReply(_server->getName(), nickname, channelName, channel->getMembersList());
-		// std::cout << "rplNamReply: " << msg << std::endl;
 		_server->sendData(sd, msg);
 
 		msg = rplEndOfNames(_server->getName(), nickname, channelName);
-		// std::cout << "rplNamReplyEND: " << msg << std::endl;
 		_server->sendData(sd, msg);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 20:02:40 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 20:08:26 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 21:04:06 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -46,16 +46,16 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 			return;
 		}
 
-		if (!channel->isOperator(&user))
-		{
-			std::string msg = errChanOpPrivsNeeded(_server->getName(), nickname, target);
-			_server->sendData(sd, msg);
-			return;
-		}
-
 		if (cmd.hasParamAtPos(1, 0))
 		{
-			// Setter
+			// Setter (Only Operator area)
+			if (!channel->isOperator(&user))
+			{
+				std::string msg = errChanOpPrivsNeeded(_server->getName(), nickname, target);
+				_server->sendData(sd, msg);
+				return;
+			}
+
 			std::string modes = cmd.getParamAtPos(1, 0);
 
 			bool add = true;

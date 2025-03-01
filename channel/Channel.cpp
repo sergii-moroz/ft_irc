@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:51:11 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 20:06:14 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 21:10:24 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -195,7 +195,7 @@ std::string	Channel::getModeArgs() const
 	std::string args;
 
 	if (getMode(KEY_MODE))
-		args += getKey();
+		args += "???";
 
 	if (getMode(LIMIT_MODE))
 	{
