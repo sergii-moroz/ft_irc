@@ -3,51 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   handleMODE.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 20:02:40 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/28 11:49:12 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/01 20:08:26 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
 #include "CommandHandler.hpp"
 
 void CommandHandler::handleMODE(int sd, Command const & cmd)
-// {
-// 	(void)sd;
-// 	(void)cmd;
-// }
 {
-	User &user = _server->getUser(sd);
-	std::string nick = user.getNickname();
+	User &		user = _server->getUser(sd);
+	std::string	nickname = user.getNickname();
+
+	// Guard REGISTERED
+	if (!user.getStatus(REGISTERED))
+	{
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] Command \"" << cmd.getName() << "\" available only for registered users." << std::endl;
+		// optional send error here
+		return;
+	}
 
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0)) {
-		std::string msg = ":" + _server->getName() + " 461 " + nick
-						  + " MODE :Not enough parameters\r\n";
+		std::string msg = errNeedMoreParams(_server->getName(), cmd.getName());
 		_server->sendData(sd, msg);
 		return;
 	}
 
 	std::string target = cmd.getParamAtPos(0, 0);
 
-	if (!target.empty() && target[0] == '#') {
+	if (!target.empty() && target[0] == '#')
+	{
+		// Handle Channel's mode
 		Channel *channel = _server->getChannelByName(target);
-		if (!channel) {
-			std::string msg = ":" + _server->getName() + " 403 " + nick
-							  + " " + target + " :No such channel\r\n";
+
+		if (!channel)
+		{
+			std::cout << "ERROR: " << nickname << " [" << sd << "] ERR_NOSUCHCHANNEL (403)" << std::endl;
+			std::string	msg = errNoSuchChannel(_server->getName(), nickname, target);
 			_server->sendData(sd, msg);
 			return;
 		}
 
-		if (!channel->isOperator(&user)) {
-			std::string msg = ":" + _server->getName() + " 482 " + nick
-							  + " " + channel->getName()
-							  + " :You're not channel operator\r\n";
+		if (!channel->isOperator(&user))
+		{
+			std::string msg = errChanOpPrivsNeeded(_server->getName(), nickname, target);
 			_server->sendData(sd, msg);
 			return;
 		}
 
-		if (cmd.hasParamAtPos(1, 0)) {
+		if (cmd.hasParamAtPos(1, 0))
+		{
+			// Setter
 			std::string modes = cmd.getParamAtPos(1, 0);
 
 			bool add = true;
@@ -60,9 +68,10 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 					add = false;
 					continue;
 				}
-				switch (c) {
+				switch (c)
+				{
 					case 'i': // invite-only
-						channel->setMode(INVATE_MODE, add);
+						channel->setMode(INVITE_MODE, add);
 						break;
 					case 't': // topic lock
 						channel->setMode(TOPIC_MODE, add);
@@ -87,49 +96,27 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 							channel->setUserLimit(0); // 0 — without limit
 						}
 						break;
-					// case 'b': // ban
-					// 	if (add) {
-
-					// 		if (cmd.hasParamAtPos(2, 0)) {
-					// 			channel->_banList.insert(cmd.getParamAtPos(2, 0));
-					// 		}
-					// 	} else {
-					// 		if (cmd.hasParamAtPos(2, 0)) {
-					// 			channel->_banList.erase(cmd.getParamAtPos(2, 0));
-					// 		}
-					// 	}
-					// 	break;
 					default:
 						break;
 				}
 			}
 
-			std::string broadcastMsg = ":" + nick + "!" + user.getUsername()
+			std::string broadcastMsg = ":" + nickname + "!" + user.getUsername()
 				+ "@" + _server->getName()
 				+ " MODE " + target + " " + modes + "\r\n";
 			channel->broadcastAll(_server, broadcastMsg);
 		}
-		else {
-			std::string currentModes = "+";
-			if (channel->getMode(INVATE_MODE))
-				currentModes += "i";
-			if (channel->getMode(TOPIC_MODE))
-				currentModes += "t";
-			if (channel->getMode(KEY_MODE))
-				currentModes += "k";
-			if (channel->getMode(LIMIT_MODE))
-				currentModes += "l";
-			// if (channel->getMode(BAN_MODE))
-			// 	currentModes += "b";
-			std::string msg = ":" + _server->getName() + " 324 " + nick
-							  + " " + channel->getName() + " " + currentModes
-							  + " " + channel->getKey() + "\r\n"; // + " " + std::itoa(channel->getUserLimit())
+		else
+		{
+			// Getter
+			std::string msg = rplChannelModeIs(_server->getName(), nickname, channel);
 			_server->sendData(sd, msg);
 		}
 	}
-	else {
-		std::string msg = ":" + _server->getName() + " 501 " + nick
-						  + " :Unknown MODE target\r\n";
+	else
+	{
+		// Handle User's mode
+		std::string msg = errUModeUnknownFlag(_server->getName(), nickname);
 		_server->sendData(sd, msg);
 	}
 }

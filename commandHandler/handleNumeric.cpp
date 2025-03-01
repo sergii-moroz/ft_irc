@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/01 15:41:24 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 20:05:45 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -19,6 +19,15 @@
 std::string	CommandHandler::rplWelcome(std::string const & serverName, std::string const & nickname) const
 {
 	return (":" + serverName + " 001 " + nickname + " :Welcome to the IRC Network, " + nickname + "!\r\n");
+}
+
+// ==========================================
+// RPL_CHANNELMODEIS (324)
+// ==========================================
+
+std::string	CommandHandler::rplChannelModeIs(std::string const & serverName, std::string const & client, Channel *channel) const
+{
+	return (":" + serverName + " 324 " + client + " " + channel->getName() + " " + channel->getModeList() + " " + channel->getModeArgs() + "\r\n");
 }
 
 // ==========================================
@@ -156,4 +165,13 @@ std::string	CommandHandler::errPasswdMismatch(std::string const & serverName) co
 std::string	CommandHandler::errChanOpPrivsNeeded(std::string const & serverName, std::string const & client, std::string const & channel) const
 {
 	return (":" + serverName + " 482 " + client + " " + channel + " :You're not channel operator\r\n");
+}
+
+// ==========================================
+// ERR_UMODEUNKNOWNFLAG (501)
+// ==========================================
+
+std::string	CommandHandler::errUModeUnknownFlag(std::string const & serverName, std::string const & client)
+{
+	return (":" + serverName + " " + client +" :Unknown MODE flag\r\n");
 }

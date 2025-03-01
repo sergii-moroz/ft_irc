@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/01 15:42:21 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 20:07:51 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -18,6 +18,7 @@
 # include "Server.hpp"
 
 class Server;
+class Channel;
 
 class CommandHandler
 {
@@ -51,6 +52,7 @@ class CommandHandler
 		void	handleTOPIC(int sd, Command const &cmd);
 
 		std::string	rplWelcome(std::string const &, std::string const &) const;											// 001
+		std::string	rplChannelModeIs(std::string const & serverName, std::string const & client, Channel *channel) const;	// 324
 		std::string	rplNoTopic(std::string const &, std::string const &, std::string const &) const;					// 331
 		std::string	rplTopic(std::string const &, std::string const &, std::string const &, std::string const &) const;	// 332
 		std::string	rplNamReply(std::string const &, std::string const &, std::string const &, std::string const &) const;	// 353
@@ -65,6 +67,7 @@ class CommandHandler
 		std::string	errAlreadyRegistered(std::string const &, std::string const &) const;								// 462
 		std::string	errPasswdMismatch(std::string const &) const;														// 464
 		std::string	errChanOpPrivsNeeded(std::string const &, std::string const &, std::string const &) const;			// 482
+		std::string	errUModeUnknownFlag(std::string const & serverName, std::string const & client);					// 501
 };
 
 #endif
