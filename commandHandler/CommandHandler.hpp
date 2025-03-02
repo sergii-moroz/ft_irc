@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/01 22:05:50 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 11:13:25 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -45,6 +45,7 @@ class CommandHandler
 		void	handlePRIVMSG(int, Command const &);
 
 		void	handleJOIN(int, Command const &);
+		void	handlePART(int, Command const &);
 		void	handleKICK(int, Command const &);
 
 		void	handleMODE(int, Command const &);
