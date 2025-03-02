@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 12:11:32 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/27 14:00:07 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/01 21:48:03 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -149,7 +149,6 @@ std::ostream &	operator<<(std::ostream & out, User const & ref)
 		{
 			out << (*it)->getName() << " ";
 		}
-		out << std::string(2, ' ') << "}" << std::endl;
-		out << std::endl << "}";
+		out << std::endl << std::string(2, ' ') << "}" << std::endl << "}";
 	return (out);
 }

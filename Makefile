@@ -1,5 +1,4 @@
 
-
 NAME			=	ircserv
 
 CC				=	c++
@@ -14,9 +13,10 @@ INC				=	$(addprefix -I, $(SRC_DIRS))
 SRCS			=	main.cpp \
 					User.cpp \
 					Token.cpp Lexer.cpp Command.cpp \
-					CommandHandler.cpp handleCAP.cpp handleNumeric.cpp \
+					CommandHandler.cpp handleCAP.cpp handleNumeric.cpp handleQUIT.cpp \
 					Channel.cpp \
-					handlePASS.cpp handleNICK.cpp handleUSER.cpp handlePING.cpp handlePONG.cpp handlePRIVMSG.cpp handleJOIN.cpp handleKICK.cpp handleMODE.cpp handleINVITE.cpp handleTOPIC.cpp\
+					handlePASS.cpp handleNICK.cpp handleUSER.cpp handlePING.cpp handlePONG.cpp handlePRIVMSG.cpp \
+					handleJOIN.cpp handlePART.cpp handleKICK.cpp handleMODE.cpp handleINVITE.cpp handleTOPIC.cpp \
 					Utils.cpp \
 					Server.cpp
 

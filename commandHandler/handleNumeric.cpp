@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 22:08:18 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 22:05:09 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -19,6 +19,15 @@
 std::string	CommandHandler::rplWelcome(std::string const & serverName, std::string const & nickname) const
 {
 	return (":" + serverName + " 001 " + nickname + " :Welcome to the IRC Network, " + nickname + "!\r\n");
+}
+
+// ==========================================
+// RPL_CHANNELMODEIS (324)
+// ==========================================
+
+std::string	CommandHandler::rplChannelModeIs(std::string const & serverName, std::string const & client, Channel *channel) const
+{
+	return (":" + serverName + " 324 " + client + " " + channel->getName() + " " + channel->getModeList() + " " + channel->getModeArgs() + "\r\n");
 }
 
 // ==========================================
@@ -44,6 +53,28 @@ std::string	CommandHandler::rplTopic(
 	std::string const & topic) const
 {
 	return (":" + serverName + " 332 " + client + " " + channelName + " :" + topic + "\r\n");
+}
+
+// ==========================================
+// RPL_NAMREPLY (353)
+// ==========================================
+
+std::string	CommandHandler::rplNamReply(
+	std::string const & serverName,
+	std::string const & client,
+	std::string const & channelName,
+	std::string const & members) const
+{
+	return (":" + serverName + " 353 " + client + " = " + channelName + " :" + members + "\r\n");
+}
+
+// ==========================================
+// RPL_ENDOFNAMES (366)
+// ==========================================
+
+std::string	CommandHandler::rplEndOfNames(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 366 " + client + " " + channel + " :End of /NAMES list\r\n");
 }
 
 // ==========================================
@@ -128,10 +159,37 @@ std::string	CommandHandler::errPasswdMismatch(std::string const & serverName) co
 }
 
 // ==========================================
+// ERR_CHANNELISFULL (471)
+// ==========================================
+
+std::string	CommandHandler::errChannelIsFull(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 471 " + client + " " + channel + " :Cannot join channel (+l)\r\n");
+}
+
+// ==========================================
+// ERR_BADCHANNELKEY (475)
+// ==========================================
+
+std::string	CommandHandler::errBadChannelKey(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n");
+}
+
+// ==========================================
 // ERR_CHANOPRIVSNEEDED (482)
 // ==========================================
 
 std::string	CommandHandler::errChanOpPrivsNeeded(std::string const & serverName, std::string const & client, std::string const & channel) const
 {
 	return (":" + serverName + " 482 " + client + " " + channel + " :You're not channel operator\r\n");
+}
+
+// ==========================================
+// ERR_UMODEUNKNOWNFLAG (501)
+// ==========================================
+
+std::string	CommandHandler::errUModeUnknownFlag(std::string const & serverName, std::string const & client)
+{
+	return (":" + serverName + " " + client +" :Unknown MODE flag\r\n");
 }

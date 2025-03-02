@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/27 14:47:34 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/02 12:02:28 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -30,8 +30,6 @@ Server::Server(Server const & copy)
 Server::Server(int port, std::string & pass) : _listen_sd(-1), _timeout(15 * 1000), _port(port), _pass(pass), _name(NAME)
 {
 	std::cout << "Server: Custom constructor called" << std::endl;
-	createChannel("general");
-	createChannel("smalltalk");
 }
 
 // ==========================================
@@ -360,6 +358,11 @@ Channel	*Server::getChannelByName(std::string const &channelName)
 void	Server::createChannel(std::string const & channelName)
 {
 	_channels[channelName] = new Channel(channelName);
+}
+
+void	Server::deleteChannel(std::string const & channelName)
+{
+	_channels.erase(channelName);
 }
 
 // Channel * Server::findOrCreateChannel(std::string const &channelName)

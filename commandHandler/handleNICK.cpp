@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 17:05:14 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 20:36:11 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 21:43:19 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -36,7 +36,7 @@ void	CommandHandler::handleNICK(int sd, Command const & cmd)
 		std::string	newNickname = cmd.getParamAtPos(0, 0);
 
 		// check new nickname is valid
-		if (!Utils::isValidNickname(newNickname, 6))
+		if (!Utils::isValidNickname(newNickname, USERLEN))
 		{
 			std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_ERRONEUSNICKNAME (432)" << std::endl;
 			std::string	msg = errErroneusNickName(_server->getName(), nickname, newNickname);

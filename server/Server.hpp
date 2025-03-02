@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/27 13:32:28 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/02 11:49:02 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -65,8 +65,7 @@ class Server
 		//chanel
 		Channel *	getChannelByName(std::string const &channelName);
 		void		createChannel(std::string const &);
-		// void		addChannel(Channel *channel);
-		// Channel *	findOrCreateChannel(std::string const &channelName);
+		void		deleteChannel(std::string const &);
 
 	private:
 		void		handlePollIn(size_t i);
