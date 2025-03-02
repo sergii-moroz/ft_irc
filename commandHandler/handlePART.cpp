@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 17:36:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 11:15:19 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 11:58:20 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -59,4 +59,12 @@ void	CommandHandler::handlePART(int sd, Command const & cmd)
 	+ " PART " + channelName + " :Goodbye everyone!\r\n";
 	channel->broadcastAll(_server, msg);
 	channel->removeUser(&user);
+
+	// delete channel if it is empty
+	if (channel->getUsersCount() == 0)
+	{
+		std::cout << "INFO: last user leave the channel \"" << channelName << "\"."<< std::endl;
+		std::cout << "INFO: The channel \"" << channelName << "\" was deleted."<< std::endl;
+		_server->deleteChannel(channelName);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:08:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 11:34:40 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 13:02:01 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -27,6 +27,15 @@ void	CommandHandler::handleQUIT(int sd, Command const & cmd)
 		// (*it)->broadcast(_server, msg, sd);
 		(*it)->broadcastAll(_server, msg);
 		(*it)->removeUser(&user);
+
+		// delete channel if it is empty
+		std::string	channelName = (*it)->getName();
+		if ((*it)->getUsersCount() == 0)
+		{
+			std::cout << "INFO: last user leave the channel \"" << channelName << "\"."<< std::endl;
+			std::cout << "INFO: The channel \"" << channelName << "\" was deleted."<< std::endl;
+			_server->deleteChannel(channelName);
+		}
 	}
 	_server->clearClient(sd);
 }
