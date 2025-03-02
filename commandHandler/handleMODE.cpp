@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 20:02:40 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 21:04:06 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 13:55:57 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -59,6 +59,7 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 			std::string modes = cmd.getParamAtPos(1, 0);
 
 			bool add = true;
+			size_t	iarg = 2;
 			for (size_t i = 0; i < modes.size(); ++i) {
 				char c = modes[i];
 				if (c == '+') {
@@ -77,22 +78,38 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 						channel->setMode(TOPIC_MODE, add);
 						break;
 					case 'k': // channel key (password)
-						channel->setMode(KEY_MODE, add);
-						if (add) {
-							if (cmd.hasParamAtPos(2, 0)) {
-								channel->setKey(cmd.getParamAtPos(2, 0));
+						if (add)
+						{
+							if (cmd.hasParamAtPos(iarg, 0))
+							{
+								std::string	password = Utils::validatePass(cmd.getParamAtPos(iarg, 0).c_str());
+								if (!password.empty())
+								{
+									channel->setMode(KEY_MODE, true);
+									channel->setKey(password);
+								}
 							}
-						} else {
+							++iarg;
+						}
+						else
+						{
+							channel->setMode(KEY_MODE, false);
 							channel->setKey("");
 						}
 						break;
 					case 'l': // user limit
-						channel->setMode(LIMIT_MODE, add);
-						if (add) {
-							if (cmd.hasParamAtPos(2, 0)) {
-								channel->setUserLimit(std::atoi(cmd.getParamAtPos(2, 0).c_str()));
+						if (add)
+						{
+							if (cmd.hasParamAtPos(iarg, 0))
+							{
+								channel->setMode(LIMIT_MODE, true);
+								channel->setUserLimit(std::atoi(cmd.getParamAtPos(iarg, 0).c_str()));
 							}
-						} else {
+							++iarg;
+						}
+						else
+						{
+							channel->setMode(LIMIT_MODE, false);
 							channel->setUserLimit(0); // 0 — without limit
 						}
 						break;
@@ -112,6 +129,9 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 			std::string msg = rplChannelModeIs(_server->getName(), nickname, channel);
 			_server->sendData(sd, msg);
 		}
+
+		// DEBUG
+		std::cout << *channel << std::endl;
 	}
 	else
 	{
