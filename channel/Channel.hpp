@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:50:06 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 22:11:22 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 12:47:02 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -67,6 +67,8 @@ class Channel
 		bool 					isOperator(User *user) const;
 		bool 					isInvitedUser(User *user) const;
 		std::string				getMembersList() const;
+		std::string				getOperatorsList() const;
+		std::string				getInvitedList() const;
 		std::string				getModeList() const;
 		std::string				getModeArgs() const;
 
@@ -85,5 +87,7 @@ class Channel
 		std::set<User *>		_operators;
 		std::set<User *>		_invited;
 };
+
+std::ostream &	operator<<(std::ostream &, Channel const &);
 
 #endif

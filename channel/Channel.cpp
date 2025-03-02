@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:51:11 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 22:11:53 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 12:43:33 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -182,6 +182,30 @@ std::string Channel::getMembersList() const
 	return (membersList);
 }
 
+std::string Channel::getOperatorsList() const
+{
+	std::string	operatorsList;
+	for (std::set<User *>::const_iterator it = _operators.begin(); it != _operators.end(); it++)
+	{
+		if (isOperator(*it))
+			operatorsList += "@";
+		operatorsList += (*it)->getNickname();
+		operatorsList += " ";
+	}
+	return (operatorsList);
+}
+
+std::string Channel::getInvitedList() const
+{
+	std::string	invitedList;
+	for (std::set<User *>::const_iterator it = _invited.begin(); it != _invited.end(); it++)
+	{
+		invitedList += (*it)->getNickname();
+		invitedList += " ";
+	}
+	return (invitedList);
+}
+
 std::string	Channel::getModeList() const
 {
 	static std::string	modies = "itkl";
@@ -230,4 +254,20 @@ void Channel::broadcast(Server *server, std::string const &message, int excludeF
 		if (sd != excludeFd)
 			server->sendData(sd, message);
 	}
+}
+
+std::ostream &	operator<<(std::ostream & out, Channel const & ref)
+{
+	out << "Channel: { " << std::endl
+	<< std::string(2, ' ') << "name: " << ref.getName() << std::endl
+	<< std::string(2, ' ') << "topic: \"" << ref.getTopic() << "\"" << std::endl
+	<< std::string(2, ' ') << "key: " << ref.getKey() << std::endl
+	<< std::string(2, ' ') << "user limit: " << ref.getUserLimit() << std::endl
+	<< std::string(2, ' ') << "users count: " << ref.getUsersCount() << std::endl
+	<< std::string(2, ' ') << "users: " << ref.getMembersList() << std::endl
+	<< std::string(2, ' ') << "mode: " << ref.getModeList() << std::endl
+	<< std::string(2, ' ') << "operators: " << ref.getOperatorsList() << std::endl
+	<< std::string(2, ' ') << "invited: " << ref.getInvitedList() << std::endl
+	<< std::endl << "}";
+return (out);
 }
