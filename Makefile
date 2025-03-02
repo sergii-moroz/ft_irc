@@ -1,5 +1,4 @@
 
-
 NAME			=	ircserv
 
 CC				=	c++
