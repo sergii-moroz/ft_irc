@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 11:13:25 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 11:36:59 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -40,6 +40,7 @@ class CommandHandler
 		void	handleNICK(int, Command const &);
 		void	handleUSER(int, Command const &);
 
+		void	handleQUIT(int, Command const &);
 		void	handlePONG(int, Command const &);
 		void	handlePING(int, Command const &);
 		void	handlePRIVMSG(int, Command const &);

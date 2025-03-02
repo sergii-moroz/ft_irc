@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:21:11 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/25 21:48:42 by smoreron         ###   ########.fr       */
+/*   Updated: 2025/03/02 11:36:21 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -81,13 +81,14 @@ void	CommandHandler::executeCommand(int sd, Command const & cmd)
 		std::make_pair("PONG", &CommandHandler::handlePONG),
 		std::make_pair("PRIVMSG", &CommandHandler::handlePRIVMSG),
 		std::make_pair("JOIN", &CommandHandler::handleJOIN),
+		std::make_pair("PART", &CommandHandler::handlePART),
 		std::make_pair("KICK", &CommandHandler::handleKICK),
 		std::make_pair("MODE", &CommandHandler::handleMODE),
 		std::make_pair("INVITE", &CommandHandler::handleINVITE),
 		std::make_pair("TOPIC", &CommandHandler::handleTOPIC),
+		std::make_pair("QUIT", &CommandHandler::handleQUIT),
+	};
 
-
-	};	
 	static const std::map<std::string, cmdFunc>	cmdMap(cmdArray, cmdArray + sizeof(cmdArray) / sizeof(cmdArray[0]));
 	std::map<std::string, cmdFunc>::const_iterator	it = cmdMap.find(cmd.getName());
 
