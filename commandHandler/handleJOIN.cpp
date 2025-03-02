@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 14:10:01 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/02 20:14:43 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 20:20:40 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -20,7 +20,7 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 	// Guard REGISTERED
 	if (!user.getStatus(REGISTERED))
 	{
-		std::cerr << "ERROR: " << nick << " [" << sd << "] Command \"" << cmd.getName() << "\" available only for registered users." << std::endl;
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] Command \"" << cmd.getName() << "\" available only for registered users." << std::endl;
 		std::string	msg = errNotRegistered(_server->getName(), nickname);
 		_server->sendData(sd, msg);
 		return ;
