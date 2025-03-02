@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:51:11 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 21:10:24 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 22:11:53 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -72,6 +72,11 @@ bool Channel::getMode(char key) const
 size_t Channel::getUserLimit() const
 {
 	return (_userLimit);
+}
+
+size_t	Channel::getUsersCount() const
+{
+	return (_users.size());
 }
 
 std::set<User *> Channel::getUsers() const

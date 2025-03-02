@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/01 20:54:37 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 22:05:09 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -156,6 +156,15 @@ std::string	CommandHandler::errAlreadyRegistered(std::string const & serverName,
 std::string	CommandHandler::errPasswdMismatch(std::string const & serverName) const
 {
 	return (":" + serverName + " 464 * :password incorect\r\n");
+}
+
+// ==========================================
+// ERR_CHANNELISFULL (471)
+// ==========================================
+
+std::string	CommandHandler::errChannelIsFull(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 471 " + client + " " + channel + " :Cannot join channel (+l)\r\n");
 }
 
 // ==========================================

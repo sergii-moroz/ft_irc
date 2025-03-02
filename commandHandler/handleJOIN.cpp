@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 14:10:01 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 20:51:15 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 22:13:31 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -72,15 +72,12 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 		}
 	}
 
-	// if (channel->getUserLimit() > 0
-	// 	&& channel->getUsers().size() >= channel->getUserLimit())
-	// {
-	// 	std::string err = "471 " + nick + " " + channelName
-	// 					  + " :Cannot join channel (+l)\r\n";
-	// 	_server->sendData(sd, err);
-	// 	return;
-	// }
-
+	if (channel->getMode(LIMIT_MODE) && channel->getUsersCount() >= channel->getUserLimit())
+	{
+		std::string	msg = errChannelIsFull(_server->getName(), nickname, channelName);
+		_server->sendData(sd, msg);
+		return;
+	}
 
 	if (!channel->isUser(&user))
 	{

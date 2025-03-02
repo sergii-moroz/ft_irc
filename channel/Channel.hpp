@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 20:50:06 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 20:06:00 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/01 22:11:22 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -43,6 +43,7 @@ class Channel
 		const std::string &		getKey() const;
 		bool					getMode(char) const;
 		size_t					getUserLimit() const;
+		size_t					getUsersCount() const;
 		std::set<User *>		getUsers() const;
 		std::set<User *>		getOperators() const;
 		std::set<User *>		getInvitedUsers() const;
