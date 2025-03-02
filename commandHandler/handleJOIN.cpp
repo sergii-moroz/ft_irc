@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 14:10:01 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 22:13:31 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 20:14:43 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -20,9 +20,10 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 	// Guard REGISTERED
 	if (!user.getStatus(REGISTERED))
 	{
-		std::cerr << "ERROR: " << nickname << " [" << sd << "] Command \"" << cmd.getName() << "\" available only for registered users." << std::endl;
-		// optional send error here
-		return;
+		std::cerr << "ERROR: " << nick << " [" << sd << "] Command \"" << cmd.getName() << "\" available only for registered users." << std::endl;
+		std::string	msg = errNotRegistered(_server->getName(), nickname);
+		_server->sendData(sd, msg);
+		return ;
 	}
 
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
@@ -47,14 +48,12 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 		std::cout << "INFO: " << nickname << " [" << sd << "] gets operators role on the " << channelName << std::endl;
 	}
 
-	// if (channel->getMode(INVITE_MODE) && !channel->isInvitedUser(&user))
-	// {
-
-	// 	std::string err = "473 " + nick + " " + channelName
-	// 					  + " :Cannot join channel (+i)\r\n";
-	// 	_server->sendData(sd, err);
-	// 	return;
-	// }
+	if (channel->getMode(INVITE_MODE) && !channel->isInvitedUser(&user))
+	{
+		std::string	msg = errInviteOnlyChan(_server->getName(), nickname, channelName);
+		_server->sendData(sd, msg);
+		return ;
+	}
 
 	if (channel->getMode(KEY_MODE))
 	{

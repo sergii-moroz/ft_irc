@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 13:07:29 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 20:03:08 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -57,6 +57,7 @@ class CommandHandler
 		std::string	rplChannelModeIs(std::string const & serverName, std::string const & client, Channel *channel) const;	// 324
 		std::string	rplNoTopic(std::string const &, std::string const &, std::string const &) const;					// 331
 		std::string	rplTopic(std::string const &, std::string const &, std::string const &, std::string const &) const;	// 332
+		std::string	rplInviting(std::string const &, std::string const &, std::string const &, std::string const &) const;	// 341
 		std::string	rplNamReply(std::string const &, std::string const &, std::string const &, std::string const &) const;	// 353
 		std::string	rplEndOfNames(std::string const &, std::string const &, std::string const &) const;					// 366
 		std::string	errNoSuchNick(std::string const &, std::string const &, std::string const &) const;					// 401
@@ -65,10 +66,13 @@ class CommandHandler
 		std::string	errErroneusNickName(std::string const &, std::string const &, std::string const &) const;			// 432
 		std::string	errNicknameInUse(std::string const &, std::string const &, std::string const &) const;				// 433
 		std::string	errNotOnChannel(std::string const &, std::string const &, std::string const &) const;				// 442
+		std::string	errUserOnChannel(std::string const &, std::string const &, std::string const &, std::string const &) const;	// 443
+		std::string	errNotRegistered(std::string const &, std::string const &) const;									// 451
 		std::string	errNeedMoreParams(std::string const &, std::string const &) const;									// 461
 		std::string	errAlreadyRegistered(std::string const &, std::string const &) const;								// 462
 		std::string	errPasswdMismatch(std::string const &) const;														// 464
 		std::string	errChannelIsFull(std::string const &, std::string const &, std::string const &) const;				// 471
+		std::string	errInviteOnlyChan(std::string const &, std::string const &, std::string const &) const;				// 473
 		std::string	errBadChannelKey(std::string const &, std::string const &, std::string const &) const;				// 475
 		std::string	errChanOpPrivsNeeded(std::string const &, std::string const &, std::string const &) const;			// 482
 		std::string	errUModeUnknownFlag(std::string const & serverName, std::string const & client);					// 501

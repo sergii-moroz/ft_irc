@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/01 22:05:09 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 20:02:05 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -53,6 +53,15 @@ std::string	CommandHandler::rplTopic(
 	std::string const & topic) const
 {
 	return (":" + serverName + " 332 " + client + " " + channelName + " :" + topic + "\r\n");
+}
+
+// ==========================================
+// RPL_INVITING (341)
+// ==========================================
+
+std::string	CommandHandler::rplInviting(std::string const & serverName, std::string const & client, std::string const & nick, std::string const & channel) const
+{
+	return (":" + serverName + " 341 " + client + " " + nick + " " + channel + "\r\n");
 }
 
 // ==========================================
@@ -132,6 +141,24 @@ std::string	CommandHandler::errNotOnChannel(std::string const & serverName, std:
 }
 
 // ==========================================
+// ERR_USERONCHANNEL (443)
+// ==========================================
+
+std::string	CommandHandler::errUserOnChannel(std::string const & serverName, std::string const & client, std::string const & nick, std::string const & channel) const
+{
+	return (":" + serverName + " 443 " + client + " " + nick + " " + channel + " :is already on channel\r\n");
+}
+
+// ==========================================
+// ERR_NOTREGISTERED (451)
+// ==========================================
+
+std::string	CommandHandler::errNotRegistered(std::string const & serverName, std::string const & client) const
+{
+	return (":" + serverName + " 451 " + client + " :You have not registered\r\n");
+}
+
+// ==========================================
 // ERR_NEEDMOREPARAMS (461)
 // ==========================================
 
@@ -165,6 +192,15 @@ std::string	CommandHandler::errPasswdMismatch(std::string const & serverName) co
 std::string	CommandHandler::errChannelIsFull(std::string const & serverName, std::string const & client, std::string const & channel) const
 {
 	return (":" + serverName + " 471 " + client + " " + channel + " :Cannot join channel (+l)\r\n");
+}
+
+// ==========================================
+// ERR_INVITEONLYCHAN (473)
+// ==========================================
+
+std::string	CommandHandler::errInviteOnlyChan(std::string const & serverName, std::string const & client, std::string const & channel) const
+{
+	return (":" + serverName + " 473 " + client + " " + channel + " :Cannot join channel (+i)\r\n");
 }
 
 // ==========================================
