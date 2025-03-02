@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 20:02:40 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/02 13:55:57 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 18:24:47 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -102,8 +102,12 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 						{
 							if (cmd.hasParamAtPos(iarg, 0))
 							{
-								channel->setMode(LIMIT_MODE, true);
-								channel->setUserLimit(std::atoi(cmd.getParamAtPos(iarg, 0).c_str()));
+								int	limit = Utils::validateInteger(cmd.getParamAtPos(iarg, 0));
+								if (limit > 0 && limit < 100)
+								{
+									channel->setMode(LIMIT_MODE, true);
+									channel->setUserLimit(limit);
+								}
 							}
 							++iarg;
 						}

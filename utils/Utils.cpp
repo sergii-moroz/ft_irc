@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 15:00:16 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 19:14:30 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 18:24:02 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -78,6 +78,13 @@ int	Utils::strToInteger(std::string const & s)
 	int	i;
 	iss >> i;
 	return (i);
+}
+
+int	Utils::validateInteger(std::string const & s)
+{
+	if (!Utils::isInteger(s))
+		return (-1);
+	return (Utils::strToInteger(s));
 }
 
 int	Utils::validatePort(char const *arg)

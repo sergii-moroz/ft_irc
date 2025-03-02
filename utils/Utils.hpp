@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 14:58:45 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 19:15:56 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/02 18:24:27 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -27,6 +27,7 @@ class Utils
 		static std::string	validatePass(char const *arg);
 		static std::string	validateUsername(std::string const &, size_t);
 		static bool			isValidNickname(std::string const &, size_t);
+		static int			validateInteger(std::string const & s);
 
 	private:
 		Utils();
