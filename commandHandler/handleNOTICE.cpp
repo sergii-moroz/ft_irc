@@ -21,15 +21,12 @@ void CommandHandler::handleNOTICE(int sd, Command const &cmd)
 	if (!sender.getStatus(REGISTERED))
 	{
 		std::cerr << "ERROR: " << senderNick << " [" << sd << "] Command \"" << cmd.getName() << "\" available only for registered users." << std::endl;
-		// optional send error here
 		return ;
 	}
 
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
-		std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NEEDMOREPARAMS (461)" << std::endl;
-		std::string msg = errNeedMoreParams(_server->getName(), cmd.getName());
-		_server->sendData(sd, msg);
+		std::cerr << "ERROR: " << senderNick << " [" << sd << "] ERR_NEEDMOREPARAMS (461)" << std::endl;
 		return ;
 	}
 
@@ -40,17 +37,13 @@ void CommandHandler::handleNOTICE(int sd, Command const &cmd)
 		Channel	*channel = _server->getChannelByName(target);
 		if (!channel)
 		{
-			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHCHANNEL (403)" << std::endl;
-			std::string	errMsg = errNoSuchChannel(_server->getName(), senderNick, target);
-			_server->sendData(sd, errMsg);
+			std::cerr << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHCHANNEL (403)" << std::endl;
 			return ;
 		}
 
 		if (!channel->isUser(&sender))
 		{
-			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOTONCHANNEL (442)" << std::endl;
-			std::string	errMsg = errNotOnChannel(_server->getName(), senderNick, target);
-			_server->sendData(sd, errMsg);
+			std::cerr << "ERROR: " << senderNick << " [" << sd << "] ERR_NOTONCHANNEL (442)" << std::endl;
 			return ;
 		}
 
@@ -64,9 +57,7 @@ void CommandHandler::handleNOTICE(int sd, Command const &cmd)
 		User	*recipient = _server->getUserByNickname(target);
 		if (!recipient)
 		{
-			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHNICK (401)" << std::endl;
-			std::string	msg = errNoSuchNick(_server->getName(), senderNick, target);
-			_server->sendData(sd, msg);
+			std::cerr << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHNICK (401)" << std::endl;
 			return;
 		}
 
