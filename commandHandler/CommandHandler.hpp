@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 20:03:08 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/03 16:34:13 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -44,6 +44,7 @@ class CommandHandler
 		void	handlePONG(int, Command const &);
 		void	handlePING(int, Command const &);
 		void	handlePRIVMSG(int, Command const &);
+		void	handleNOTICE(int, Command const &);
 
 		void	handleJOIN(int, Command const &);
 		void	handlePART(int, Command const &);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:21:11 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 13:06:48 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/03 16:35:05 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -80,6 +80,7 @@ void	CommandHandler::executeCommand(int sd, Command const & cmd)
 		std::make_pair("PING", &CommandHandler::handlePING),
 		std::make_pair("PONG", &CommandHandler::handlePONG),
 		std::make_pair("PRIVMSG", &CommandHandler::handlePRIVMSG),
+		std::make_pair("NOTICE", &CommandHandler::handleNOTICE),
 		std::make_pair("JOIN", &CommandHandler::handleJOIN),
 		std::make_pair("PART", &CommandHandler::handlePART),
 		std::make_pair("KICK", &CommandHandler::handleKICK),
