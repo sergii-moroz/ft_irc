@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 12:02:28 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/03 16:13:52 by olanokhi         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -231,6 +231,15 @@ void	Server::receiveData(int sd)
 	else if (rc == 0)
 	{
 		std::cout << "INFO: Connection was closed by client. Socket " << sd << std::endl;
+		User & user = _users[sd];
+		std::set<Channel *> ch = user.getJoinedChannels();
+		for (std::set<Channel *>::iterator it = ch.begin(); it != ch.end(); ++it)
+		{
+			(*it)->broadcastAll(this, "QUIT " + user.getNickname() + " has left the channel");
+			if ((*it)->isOperator(&user))
+				(*it)->removeOperator(&user);
+			(*it)->removeUser(&user);
+		}
 		clearClient(sd);
 	}
 	else
