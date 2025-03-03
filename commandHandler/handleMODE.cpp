@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 20:02:40 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/02 18:24:47 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/03 10:47:49 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -115,6 +115,26 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 						{
 							channel->setMode(LIMIT_MODE, false);
 							channel->setUserLimit(0); // 0 — without limit
+						}
+						break;
+					case 'o':
+						User	*newOperator;
+
+						if (cmd.hasParamAtPos(iarg, 0))
+							newOperator = _server->getUserByNickname(cmd.getParamAtPos(iarg, 0));
+						else
+							newOperator = NULL;
+
+						if (add)
+						{
+							if (newOperator)
+								channel->addOperator(newOperator);
+							++iarg;
+						}
+						else
+						{
+							if (channel->isOperator(newOperator))
+								channel->removeOperator(newOperator);
 						}
 						break;
 					default:
