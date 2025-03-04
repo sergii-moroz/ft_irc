@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 15:04:09 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 15:50:29 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -60,6 +60,7 @@ class CommandHandler
 		void	leaveChannel(std::string const & channelName, std::string const & reason, User & user) const;
 		void	kickSingleUser(std::string const & channelName, std::string const & targetNick, std::string const & reason, User & sender) const;
 		void	sendSingleMsg(std::string const & target, std::string const & text, User & sender) const;
+		void	sendSingleNotification(std::string const & target, std::string const & text, User & sender) const;
 
 		std::string	rplWelcome(std::string const &, std::string const &) const;											// 001
 		std::string	rplChannelModeIs(std::string const & serverName, std::string const & client, Channel *channel) const;	// 324
