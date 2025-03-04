@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/03 16:34:13 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/04 11:06:38 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -19,6 +19,7 @@
 
 class Server;
 class Channel;
+class User;
 
 class CommandHandler
 {
@@ -53,6 +54,9 @@ class CommandHandler
 		void	handleMODE(int, Command const &);
 		void	handleINVITE(int sd, Command const &cmd);
 		void	handleTOPIC(int sd, Command const &cmd);
+
+		std::vector<std::string>	splitByComma(std::string const & input, size_t len) const;
+		void	joinChannel(std::string const & channelName, std::string const & key, User & user) const;
 
 		std::string	rplWelcome(std::string const &, std::string const &) const;											// 001
 		std::string	rplChannelModeIs(std::string const & serverName, std::string const & client, Channel *channel) const;	// 324

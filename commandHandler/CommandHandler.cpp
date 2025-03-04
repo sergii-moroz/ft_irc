@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:21:11 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/03 16:35:05 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/04 11:05:30 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -97,4 +97,30 @@ void	CommandHandler::executeCommand(int sd, Command const & cmd)
 		(this->*(it->second))(sd, cmd);
 	// else
 	// 	"unknown command"
+}
+
+std::vector<std::string>	CommandHandler::splitByComma(std::string const & input, size_t len) const
+{
+	size_t						start = 0;
+	size_t						comma;
+	std::vector<std::string>	res;
+
+	while ((comma = input.find(',', start)) != std::string::npos)
+	{
+		std::string	param = input.substr(start, comma - start);
+		res.push_back(param);
+		start = comma + 1;
+	}
+
+	// Process last parameter (after last comma)
+	if (start < input.size()) {
+		std::string param = input.substr(start);
+		res.push_back(param);
+	}
+
+	// if res.size is fewer than the number len, add empty strings are used as placeholders
+	while (res.size() < len)
+		res.push_back("");
+
+	return (res);
 }
