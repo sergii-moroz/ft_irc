@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 11:06:38 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 12:34:59 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -57,6 +57,7 @@ class CommandHandler
 
 		std::vector<std::string>	splitByComma(std::string const & input, size_t len) const;
 		void	joinChannel(std::string const & channelName, std::string const & key, User & user) const;
+		void	leaveChannel(std::string const & channelName, std::string const & reason, User & user) const;
 
 		std::string	rplWelcome(std::string const &, std::string const &) const;											// 001
 		std::string	rplChannelModeIs(std::string const & serverName, std::string const & client, Channel *channel) const;	// 324
