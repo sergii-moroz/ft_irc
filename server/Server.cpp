@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/03 16:13:52 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:46:51 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -40,12 +40,6 @@ Server::~Server()
 {
 	std::cout << "Server: Destructor called" << std::endl;
 	closeAllSockets();
-
-	for (std::map<std::string, Channel*>::iterator it = _channels.begin();
-         it != _channels.end(); ++it) {
-        delete it->second;
-    }
-    _channels.clear();
 }
 
 // ==========================================
@@ -358,34 +352,18 @@ void	Server::usage(void)
 
 Channel	*Server::getChannelByName(std::string const &channelName)
 {
-	std::map<std::string, Channel *>::const_iterator it = _channels.find(channelName);
+	std::map<std::string, Channel>::iterator it = _channels.find(channelName);
 	if (it != _channels.end())
-		return (it->second);
+		return (&(it)->second);
 	return (NULL);
 }
 
 void	Server::createChannel(std::string const & channelName)
 {
-	_channels[channelName] = new Channel(channelName);
+	_channels[channelName] = Channel(channelName);
 }
 
 void	Server::deleteChannel(std::string const & channelName)
 {
 	_channels.erase(channelName);
-}
-
-// Channel * Server::findOrCreateChannel(std::string const &channelName)
-// {
-// 	Channel *chan = getChannelByName(channelName);
-// 	if (!chan)
-// 	{
-// 		_channels[channelName] = Channel(ChannelName);
-// 		// chan = new Channel(channelName);
-// 		addChannel(chan);
-// 		std::cout << "INFO: Created new channel: " << channelName << std::endl;
-// 	}
-// 	return chan;
-// }
-std::map<int, User> Server::getAllUsers() const {
-    return _users;
 }

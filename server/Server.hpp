@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 11:49:02 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 17:40:49 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -85,7 +85,7 @@ class Server
 		std::vector<struct pollfd>	_fds;
 		static bool					_forever;
 		std::string					_name;
-		std::map<std::string, Channel *>	_channels;
+		std::map<std::string, Channel>	_channels;
 };
 
 #endif
