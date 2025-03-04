@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 14:10:01 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/02 20:20:40 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 11:28:49 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -34,7 +34,24 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 		return;
 	}
 
-	std::string channelName = cmd.getParamAtPos(0, 0);
+	std::string	args = cmd.getParamAtPos(0, 0);
+	std::string	kwargs = "";
+
+	if (cmd.hasParamAtPos(1, 0))
+		kwargs = cmd.getParamAtPos(1, 0);
+
+	std::vector<std::string>	channels = splitByComma(args, 0);
+	std::vector<std::string>	keys = splitByComma(kwargs, channels.size());
+
+	for (size_t i = 0; i < channels.size(); ++i)
+		joinChannel(channels[i], keys[i], user);
+}
+
+void	CommandHandler::joinChannel(std::string const & channelName, std::string const & key, User & user) const
+{
+	std::string	nickname = user.getNickname();
+	int	sd = user.getFd();
+
 	Channel *channel = _server->getChannelByName(channelName);
 
 	if (!channel)
@@ -55,20 +72,13 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 		return ;
 	}
 
-	if (channel->getMode(KEY_MODE))
+	if (channel->getMode(KEY_MODE) && key != channel->getKey())
 	{
-		std::string	key;
-		if (cmd.hasParamAtPos(1, 0))
-			key = cmd.getParamAtPos(1, 0);
-
-		if (key != channel->getKey())
-		{
-			std::cerr << "ERROR: " <<  nickname << " [" << sd << "] ERR_BADCHANNELKEY (475) - the channel \"" << channelName
-				<< "\" requires a key and the key was either incorrect or not supplied." << std::endl;
-			std::string	msg = errBadChannelKey(_server->getName(), nickname, channelName);
-			_server->sendData(sd, msg);
-			return ;
-		}
+		std::cerr << "ERROR: " <<  nickname << " [" << sd << "] ERR_BADCHANNELKEY (475) - the channel \"" << channelName
+			<< "\" requires a key and the key was either incorrect or not supplied." << std::endl;
+		std::string	msg = errBadChannelKey(_server->getName(), nickname, channelName);
+		_server->sendData(sd, msg);
+		return ;
 	}
 
 	if (channel->getMode(LIMIT_MODE) && channel->getUsersCount() >= channel->getUserLimit())
@@ -87,9 +97,8 @@ void CommandHandler::handleJOIN(int sd, Command const & cmd)
 			channel->removeInvitedUser(&user);
 
 		// Send to all user
-		std::string	msg = ":" + nickname + "!" + user.getUsername()
-			+ "@" + _server->getName()
-			+  " JOIN " + channelName + "\r\n";
+		std::string	msg = ":" + nickname + "!" + user.getUsername() + "@" + _server->getName()
+			+ " JOIN " + channelName + "\r\n";
 		channel->broadcastAll(_server, msg);
 
 		// Send Topic to the Joining User

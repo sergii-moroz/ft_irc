@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/03 16:34:13 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/04 15:50:29 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -19,6 +19,7 @@
 
 class Server;
 class Channel;
+class User;
 
 class CommandHandler
 {
@@ -54,6 +55,13 @@ class CommandHandler
 		void	handleINVITE(int sd, Command const &cmd);
 		void	handleTOPIC(int sd, Command const &cmd);
 
+		std::vector<std::string>	splitByComma(std::string const & input, size_t len) const;
+		void	joinChannel(std::string const & channelName, std::string const & key, User & user) const;
+		void	leaveChannel(std::string const & channelName, std::string const & reason, User & user) const;
+		void	kickSingleUser(std::string const & channelName, std::string const & targetNick, std::string const & reason, User & sender) const;
+		void	sendSingleMsg(std::string const & target, std::string const & text, User & sender) const;
+		void	sendSingleNotification(std::string const & target, std::string const & text, User & sender) const;
+
 		std::string	rplWelcome(std::string const &, std::string const &) const;											// 001
 		std::string	rplChannelModeIs(std::string const & serverName, std::string const & client, Channel *channel) const;	// 324
 		std::string	rplNoTopic(std::string const &, std::string const &, std::string const &) const;					// 331
@@ -63,6 +71,7 @@ class CommandHandler
 		std::string	rplEndOfNames(std::string const &, std::string const &, std::string const &) const;					// 366
 		std::string	errNoSuchNick(std::string const &, std::string const &, std::string const &) const;					// 401
 		std::string	errNoSuchChannel(std::string const &, std::string const &, std::string const &) const;				// 403
+		std::string	errNoTextToSend(std::string const & serverName, std::string const & client) const;					// 412
 		std::string	errNoNicknameGiven(std::string const &, std::string const &) const;									// 431
 		std::string	errErroneusNickName(std::string const &, std::string const &, std::string const &) const;			// 432
 		std::string	errNicknameInUse(std::string const &, std::string const &, std::string const &) const;				// 433

@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 17:05:14 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/01 21:43:19 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 15:31:47 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -21,7 +21,8 @@ void	CommandHandler::handleNICK(int sd, Command const & cmd)
 	if (!user.getStatus(PASSWORD))
 	{
 		std::cerr << "ERROR: " << nickname << " [" << sd << "] MUST send a PASS command before sending the NICK / USER combination." << std::endl;
-		// optional send error here
+		std::string	msg = errNotRegistered(_server->getName(), nickname);
+		_server->sendData(sd, msg);
 		return;
 	}
 
@@ -50,9 +51,18 @@ void	CommandHandler::handleNICK(int sd, Command const & cmd)
 		{
 			std::cout << "INFO: " << nickname << " [" << sd << "] has change nickname to " << newNickname << std::endl;
 			user.setNickname(newNickname);
-			std::string	msg = ":" + nickname + " NICK :" + newNickname + "\r\n";
-			_server->sendData(sd, msg);
 			user.setStatus(NICK, true);
+
+			// send message to all unique users in all channel
+			std::string	msg = ":" + nickname + "!" + user.getUsername() + "@" + _server->getName()
+				+ " NICK :" + newNickname + "\r\n";
+			std::set<User *>	uniqueUsers = user.getUniqueUsersFromJoinedChannels();
+
+			for (std::set<User *>::const_iterator it = uniqueUsers.begin(); it != uniqueUsers.end(); ++it)
+				_server->sendData((*it)->getFd(), msg);
+
+			if (uniqueUsers.empty())
+				_server->sendData(sd, msg);
 
 			// Registration is completed
 			if (!user.getStatus(REGISTERED) && user.getStatus() == END_REG)
