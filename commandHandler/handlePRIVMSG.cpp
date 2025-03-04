@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 13:23:13 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/04 15:47:09 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 20:11:45 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -61,7 +61,7 @@ void	CommandHandler::sendSingleMsg(std::string const & target, std::string const
 		Channel	*channel = _server->getChannelByName(target);
 		if (!channel)
 		{
-			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHCHANNEL (403) - PRIVMSG " << target << std::endl;
+			std::cerr << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHCHANNEL (403) - PRIVMSG " << target << std::endl;
 			std::string	errMsg = errNoSuchChannel(_server->getName(), senderNick, target);
 			_server->sendData(sd, errMsg);
 			return ;
@@ -69,7 +69,7 @@ void	CommandHandler::sendSingleMsg(std::string const & target, std::string const
 
 		if (!channel->isUser(&sender))
 		{
-			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOTONCHANNEL (442) - PRIVMSG " << target << std::endl;
+			std::cerr << "ERROR: " << senderNick << " [" << sd << "] ERR_NOTONCHANNEL (442) - PRIVMSG " << target << std::endl;
 			std::string	errMsg = errNotOnChannel(_server->getName(), senderNick, target);
 			_server->sendData(sd, errMsg);
 			return ;
@@ -84,7 +84,7 @@ void	CommandHandler::sendSingleMsg(std::string const & target, std::string const
 		User	*recipient = _server->getUserByNickname(target);
 		if (!recipient)
 		{
-			std::cout << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHNICK (401) - PRIVMSG " << target << std::endl;
+			std::cerr << "ERROR: " << senderNick << " [" << sd << "] ERR_NOSUCHNICK (401) - PRIVMSG " << target << std::endl;
 			std::string	msg = errNoSuchNick(_server->getName(), senderNick, target);
 			_server->sendData(sd, msg);
 			return;

@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 18:46:51 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 20:11:59 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -276,7 +276,7 @@ void	Server::sendData(int sd, const std::string & data)
 {
 	if (send(sd, data.c_str(), data.size(), 0) < 0)
 	{
-		std::cout << "ERROR: Send failed" << std::endl;
+		std::cerr << "ERROR: Send failed" << std::endl;
 	}
 }
 

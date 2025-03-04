@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 15:52:56 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 18:18:46 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 19:52:00 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -20,7 +20,7 @@ void	CommandHandler::handlePASS(int sd, Command const & cmd)
 	// Guard REGISTERED
 	if (user.getStatus(REGISTERED))
 	{
-		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_ALREADYREGISTERED (462)" << std::endl;
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_ALREADYREGISTERED (462) - " << cmd.getName() << std::endl;
 		std::string	msg = errAlreadyRegistered(_server->getName(), nickname);
 		_server->sendData(sd, msg);
 		return ;
@@ -30,13 +30,12 @@ void	CommandHandler::handlePASS(int sd, Command const & cmd)
 	if (user.getStatus(NICK) || user.getStatus(USER))
 	{
 		std::cerr << "ERROR: " << nickname << " [" << sd << "] MUST send a PASS command before sending the NICK / USER combination." << std::endl;
-		// optional send error here
 		return;
 	}
 
 	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
 	{
-		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NEEDMOREPARAMS (461)" << cmd.getName() << std::endl;
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NEEDMOREPARAMS (461) - " << cmd.getName() << std::endl;
 		std::string	msg = errNeedMoreParams(_server->getName(), cmd.getName());
 		_server->sendData(sd, msg);
 		_server->clearClient(sd);
@@ -48,7 +47,7 @@ void	CommandHandler::handlePASS(int sd, Command const & cmd)
 	}
 	else
 	{
-		std::cerr << "ERROR: " + nickname + " [" << sd << "] ERR_PASSWDMISMATCH (464)" << std::endl;
+		std::cerr << "ERROR: " + nickname + " [" << sd << "] ERR_PASSWDMISMATCH (464) - " << cmd.getName() << std::endl;
 		std::string	msg = errPasswdMismatch(_server->getName());
 		_server->sendData(sd, msg);
 		_server->clearClient(sd);

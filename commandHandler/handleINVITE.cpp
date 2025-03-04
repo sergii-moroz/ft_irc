@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 21:43:58 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/02 19:40:27 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 19:25:23 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -43,7 +43,7 @@ void CommandHandler::handleINVITE(int sd, Command const & cmd)
 	Channel *channel = _server->getChannelByName(channelName);
 	if (!channel)
 	{
-		std::cerr << "ERROR: " << nick << " [" << sd << "] ERR_NOSUCHCHANNEL (403) - " << cmd.getName() << std::endl;
+		std::cerr << "ERROR: " << nick << " [" << sd << "] ERR_NOSUCHCHANNEL (403) - " << cmd.getName() << " " << channelName << std::endl;
 		std::string	errMsg = errNoSuchChannel(_server->getName(), nick, channelName);
 		_server->sendData(sd, errMsg);
 		return;
@@ -51,7 +51,7 @@ void CommandHandler::handleINVITE(int sd, Command const & cmd)
 
 	if (!channel->isUser(&user))
 	{
-		std::cerr << "ERROR: " << nick << " [" << sd << "] ERR_NOTONCHANNEL (442) - " << cmd.getName() << std::endl;
+		std::cerr << "ERROR: " << nick << " [" << sd << "] ERR_NOTONCHANNEL (442) - " << cmd.getName() << " " << channelName << std::endl;
 		std::string	errMsg = errNotOnChannel(_server->getName(), nick, channelName);
 		_server->sendData(sd, errMsg);
 		return;
@@ -59,7 +59,7 @@ void CommandHandler::handleINVITE(int sd, Command const & cmd)
 
 	if (channel->getMode(INVITE_MODE) && !channel->isOperator(&user))
 	{
-		std::cerr << "ERROR: " << nick << " [" << sd << "] ERR_CHANOPRIVSNEEDED (482) - " << cmd.getName() << std::endl;
+		std::cerr << "ERROR: " << nick << " [" << sd << "] ERR_CHANOPRIVSNEEDED (482) - " << cmd.getName() << " " << channelName << std::endl;
 		std::string errMsg = errChanOpPrivsNeeded(_server->getName(), nick, channelName);
 		_server->sendData(sd, errMsg);
 		return;
@@ -69,7 +69,7 @@ void CommandHandler::handleINVITE(int sd, Command const & cmd)
 
 	if (!invitedUser)
 	{
-		std::cout << "ERROR: " << nick << " [" << sd << "] ERR_NOSUCHNICK (401)" << std::endl;
+		std::cerr << "ERROR: " << nick << " [" << sd << "] ERR_NOSUCHNICK (401) - " << cmd.getName() << " " << channelName << " " << targetNick << std::endl;
 		std::string	msg = errNoSuchNick(_server->getName(), nick, targetNick);
 		_server->sendData(sd, msg);
 		return;
@@ -78,7 +78,7 @@ void CommandHandler::handleINVITE(int sd, Command const & cmd)
 	{
 		if (channel->isUser(invitedUser))
 		{
-			std::cerr << "ERROR: " << nick << " [" << sd << "] ERR_USERONCHANNEL (443) - " << cmd.getName() << std::endl;
+			std::cerr << "ERROR: " << nick << " [" << sd << "] ERR_USERONCHANNEL (443) - " << cmd.getName() << " " << channelName << " " << targetNick << std::endl;
 			std::string	errMsg = errUserOnChannel(_server->getName(), nick, targetNick, channelName);
 			_server->sendData(sd, errMsg);
 			return;
