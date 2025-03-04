@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 15:00:16 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 18:24:02 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 15:34:20 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -169,7 +169,7 @@ std::string	Utils::validateUsername(std::string const & username, size_t length)
 
 bool	Utils::isValidNickname(std::string const & nickname, size_t length)
 {
-	static std::string	symbols = "0123456789# ";
+	static std::string	symbols = "0123456789#: ";
 
 	if (nickname.empty())
 		return (false);

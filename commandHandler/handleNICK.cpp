@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 17:05:14 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 10:16:59 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 15:31:47 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -57,8 +57,12 @@ void	CommandHandler::handleNICK(int sd, Command const & cmd)
 			std::string	msg = ":" + nickname + "!" + user.getUsername() + "@" + _server->getName()
 				+ " NICK :" + newNickname + "\r\n";
 			std::set<User *>	uniqueUsers = user.getUniqueUsersFromJoinedChannels();
+
 			for (std::set<User *>::const_iterator it = uniqueUsers.begin(); it != uniqueUsers.end(); ++it)
 				_server->sendData((*it)->getFd(), msg);
+
+			if (uniqueUsers.empty())
+				_server->sendData(sd, msg);
 
 			// Registration is completed
 			if (!user.getStatus(REGISTERED) && user.getStatus() == END_REG)
