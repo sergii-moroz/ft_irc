@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olanokhi <olanokhi@42heilbronn.de>         +#+  +:+       +#+        */
+/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 12:04:09 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/27 14:00:00 by olanokhi         ###   ########.fr       */
+/*   Updated: 2025/03/04 09:37:25 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -49,6 +49,7 @@ class User
 		std::string const &	getUsername(void) const;
 		std::string const &	getRealname(void) const;
 		std::set<Channel *> const &	getJoinedChannels() const;
+		std::set<User *>	getUniqueUsersFromJoinedChannels() const;
 
 		// Setters
 		void				setStatus(char, bool);

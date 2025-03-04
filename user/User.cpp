@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 12:11:32 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/01 21:48:03 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 09:58:15 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -126,6 +126,22 @@ std::string	User::getNextCommand(void)
 
 	return (s);
 }
+
+std::set<User *>	User::getUniqueUsersFromJoinedChannels() const
+{
+	std::set<User *>	uniqueUsers;
+	std::set<Channel *>	joinedChannels = getJoinedChannels();
+
+	for (std::set<Channel *>::const_iterator it = joinedChannels.begin(); it != joinedChannels.end(); ++it)
+	{
+		std::set<User *>	usersOnChannel = (*it)->getUsers();
+
+		uniqueUsers.insert(usersOnChannel.begin(), usersOnChannel.end());
+	}
+
+	return (uniqueUsers);
+}
+
 // ==========================================
 // Overload operator<<
 // ==========================================
