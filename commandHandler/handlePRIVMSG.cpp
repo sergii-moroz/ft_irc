@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 13:23:13 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/04 15:37:03 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 15:47:09 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -42,6 +42,7 @@ void CommandHandler::handlePRIVMSG(int sd, Command const &cmd)
 		std::cerr << "ERROR: " << senderNick << " [" << sd << "] ERR_NOTEXTTOSEND (412) - PRIVMSG" << std::endl;
 		std::string	msg = errNoTextToSend(_server->getName(), senderNick);
 		_server->sendData(sd, msg);
+		return ;
 	}
 
 	std::vector<std::string>	targets = splitByComma(args, 0);
