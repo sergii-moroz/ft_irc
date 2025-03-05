@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 15:00:16 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 15:34:20 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/05 08:25:07 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -121,7 +121,7 @@ int	Utils::validatePort(char const *arg)
 std::string	Utils::validatePass(char const *arg)
 {
 	std::string	pass(arg);
-	std::cout << "\"" << pass << "\"" << std::endl;
+	// std::cout << "\"" << pass << "\"" << std::endl;
 
 	if (pass.empty())
 	{

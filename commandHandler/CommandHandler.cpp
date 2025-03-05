@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:21:11 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 11:05:30 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 20:58:09 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -19,18 +19,18 @@
 
 CommandHandler::CommandHandler() : _server(NULL)
 {
-	std::cout << "CommandHandler: default constructor called" << std::endl;
+	// std::cout << "CommandHandler: default constructor called" << std::endl;
 }
 
 CommandHandler::CommandHandler(CommandHandler const & copy)
 {
-	std::cout << "CommandHandler: Copy constructor called" << std::endl;
+	// std::cout << "CommandHandler: Copy constructor called" << std::endl;
 	*this = copy;
 }
 
 CommandHandler::CommandHandler(Server & server) : _server(&server)
 {
-	std::cout << "CommandHandler: Special constructor called" << std::endl;
+	// std::cout << "CommandHandler: Special constructor called" << std::endl;
 }
 
 // ==========================================
@@ -39,7 +39,7 @@ CommandHandler::CommandHandler(Server & server) : _server(&server)
 
 CommandHandler::~CommandHandler()
 {
-	std::cout << "CommandHandler: destructor called" << std::endl;
+	// std::cout << "CommandHandler: destructor called" << std::endl;
 }
 
 // ==========================================
@@ -50,7 +50,7 @@ CommandHandler &	CommandHandler::operator=(CommandHandler const & rhs)
 {
 	if (this != &rhs)
 	{
-		std::cout << "CommandHandler: Assignment operator called" << std::endl;
+		// std::cout << "CommandHandler: Assignment operator called" << std::endl;
 		_server = rhs._server;
 	}
 	return (*this);
@@ -96,7 +96,7 @@ void	CommandHandler::executeCommand(int sd, Command const & cmd)
 	if (it != cmdMap.end())
 		(this->*(it->second))(sd, cmd);
 	// else
-	// 	"unknown command"
+	// 	std::cerr << "WARNING: at [" << sd << "] unknown command " << cmd.getName()  << std::endl;
 }
 
 std::vector<std::string>	CommandHandler::splitByComma(std::string const & input, size_t len) const

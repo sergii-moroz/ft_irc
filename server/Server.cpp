@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:05:10 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 20:11:59 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/05 08:12:17 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -18,18 +18,18 @@
 
 Server::Server() : _listen_sd(-1), _timeout(15 * 1000), _port(PORT), _pass(PASS), _name(NAME)
 {
-	std::cout << "Server: Default constructor called" << std::endl;
+	// std::cout << "Server: Default constructor called" << std::endl;
 }
 
 Server::Server(Server const & copy)
 {
-	std::cout << "Server: Copy constructor called" << std::endl;
+	// std::cout << "Server: Copy constructor called" << std::endl;
 	*this = copy;
 }
 
 Server::Server(int port, std::string & pass) : _listen_sd(-1), _timeout(15 * 1000), _port(port), _pass(pass), _name(NAME)
 {
-	std::cout << "Server: Custom constructor called" << std::endl;
+	// std::cout << "Server: Custom constructor called" << std::endl;
 }
 
 // ==========================================
@@ -38,7 +38,7 @@ Server::Server(int port, std::string & pass) : _listen_sd(-1), _timeout(15 * 100
 
 Server::~Server()
 {
-	std::cout << "Server: Destructor called" << std::endl;
+	// std::cout << "Server: Destructor called" << std::endl;
 	closeAllSockets();
 }
 
@@ -50,7 +50,7 @@ Server &	Server::operator=(Server const & rhs)
 {
 	if (this != &rhs)
 	{
-		std::cout << "Server: Assignment operator called" << std::endl;
+		// std::cout << "Server: Assignment operator called" << std::endl;
 		_port = rhs.getPort();
 		_pass = rhs.getPass();
 		_name = rhs.getName();
@@ -107,7 +107,7 @@ void	Server::init(void)
 		throw std::runtime_error("ERROR: listen failed!");
 
 	if (inet_ntop(AF_INET6, &serverAddr.sin6_addr, str, sizeof(str)))
-		std::cout << "INFO: Server " << str << ":" << _port << std::endl;
+		std::cout << "INFO: Server " << str << " " << _port << std::endl;
 
 	pl.fd = _listen_sd;
 	pl.events = POLLIN;
@@ -129,7 +129,11 @@ void	Server::run()
 			if (rc < 0 && Server::_forever)
 				throw(std::runtime_error("ERROR: poll failed"));
 			if (rc == 0)
-				throw(std::runtime_error("INFO: [timestamp] Waiting..."));
+			{
+				std::cout << getTimestamp() << " waiting .." << std::endl;
+				continue;
+				// throw(std::runtime_error("[ " + getTimestamp() + " ] Waiting..."));
+			}
 
 			// Process events
 			for (size_t i=0; i<_fds.size(); ++i)
@@ -159,7 +163,7 @@ void	Server::run()
 
 void	Server::handlePollIn(size_t i)
 {
-	std::cout << "DEBUG: POLLIN event on socket " << _fds[i].fd  << std::endl;
+	// std::cout << "DEBUG: POLLIN event on socket " << _fds[i].fd  << std::endl;
 	if (_fds[i].fd == _listen_sd)
 		acceptClient();				// A new client is connecting
 	else
@@ -171,7 +175,7 @@ void	Server::handlePollIn(size_t i)
 
 void	Server::handlePollHup(size_t & i)
 {
-	std::cout << "DEBUG: POLLHUP event on socket " << _fds[i].fd << std::endl;
+	// std::cout << "DEBUG: POLLHUP event on socket " << _fds[i].fd << std::endl;
 	std::cerr << "INFO: Client disconnected. Socket " << _fds[i].fd << std::endl;
 	close(_fds[i].fd); 				// Close the socket
 	_fds.erase(_fds.begin() + i);	// Remove from poll list
@@ -180,7 +184,7 @@ void	Server::handlePollHup(size_t & i)
 
 void	Server::handlePollErr(size_t & i)
 {
-	std::cout << "DEBUG: POLLERR event on socket " << _fds[i].fd << std::endl;
+	// std::cout << "DEBUG: POLLERR event on socket " << _fds[i].fd << std::endl;
 	std::cerr << "ERROR: Socket error on descriptor " << _fds[i].fd << std::endl;
 	close(_fds[i].fd); 				// Close the socket
 	_fds.erase(_fds.begin() + i);	// Remove from poll list
@@ -206,7 +210,7 @@ void	Server::acceptClient(void)
 		_fds.push_back(connection);
 		addNewUser(connection.fd);
 
-		std::cout << "Client with socket descriptor [" << connection.fd << "] connected" << std::endl;
+		std::cout << "INFO: Client with socket descriptor [" << connection.fd << "] connected" << std::endl;
 		if (inet_ntop(AF_INET6, &conn_addr.sin6_addr, str, sizeof(str)))
 			std::cout << "INFO: Client: " << str << ":" << ntohs(conn_addr.sin6_port) << std::endl;
 	}
@@ -218,7 +222,7 @@ void	Server::receiveData(int sd)
 	char	buffer[1024];
 
 	memset(buffer, 0, sizeof(buffer));
-	std::cout << "INFO: Existing descriptor " << sd << " is readable" << std::endl;
+	// std::cout << "INFO: Existing descriptor " << sd << " is readable" << std::endl;
 	rc = recv(sd, buffer, sizeof(buffer) - 1, 0);
 	if (rc < 0)
 		throw std::runtime_error("ERROR: recv() faild");
@@ -238,7 +242,7 @@ void	Server::receiveData(int sd)
 	}
 	else
 	{
-		std::cout << "INFO: Client [" << sd << "] " << rc << " bytes received" << std::endl;
+		std::cout << "INFO: Client [" << sd << "] " << rc << " bytes received" << std::endl << std::string(6, ' ');
 		_users[sd].addToBuffer(buffer);
 
 		// DEBUG print message
@@ -265,7 +269,7 @@ void	Server::processData(int sd)
 		Lexer	lex(data);
 		Command	cmd = lex.message();
 
-		std::cout << cmd << std::endl; // <-- DEBUG
+		// std::cout << cmd << std::endl; // <-- DEBUG
 
 		cmdHandler.executeCommand(sd, cmd);
 		data = _users[sd].getNextCommand();
@@ -280,7 +284,7 @@ void	Server::sendData(int sd, const std::string & data)
 	}
 }
 
-void	Server::clearClient(int sd) // Rename to removeFromPool()
+void	Server::clearClient(int sd)
 {
 	for (size_t i=0; i<_fds.size(); ++i)
 	{
@@ -325,6 +329,15 @@ User	*Server::getUserByNickname(std::string const & nickname)
 			return (&(it->second));
 	}
 	return (NULL);
+}
+
+std::string	Server::getTimestamp()
+{
+	time_t	now = time(NULL);
+	struct	tm *t = localtime(&now);
+	char	buffer[9]; // "hh:mm:ss" + '\0'
+	strftime(buffer, sizeof(buffer), "%H:%M:%S", t);
+	return (std::string(buffer));
 }
 
 // ==========================================

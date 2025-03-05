@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 10:25:00 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 19:46:26 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/05 07:59:05 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -60,6 +60,6 @@ void	CommandHandler::handleUSER(int sd, const Command &cmd)
 		}
 
 		std::cout << "INFO: " << nickname << "!" << username << "@" << _server->getName() << " [" << sd << "] registered with realname: "  << realname << std::endl;
-		std::cout << "INFO: " << user << std::endl; // <-- Debug
+		// std::cout << "INFO: " << user << std::endl; // <-- Debug
 	}
 }
