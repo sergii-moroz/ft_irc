@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 08:08:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 13:02:01 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 19:49:19 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -20,11 +20,8 @@ void	CommandHandler::handleQUIT(int sd, Command const & cmd)
 	std::set<Channel *>	joinedChannels = user.getJoinedChannels();
 	for (std::set<Channel *>::const_iterator it=joinedChannels.begin(); it != joinedChannels.end(); ++it)
 	{
-		// std::cout << (*it)->getName() << std::endl;
-		std::string	msg = ":" + nickname + "!" + user.getUsername()
-			+ "@" + _server->getName()
-			+  " QUIT " + ":Quit :" + cmd.getTail() + "\r\n";
-		// (*it)->broadcast(_server, msg, sd);
+		std::string	msg = ":" + nickname + "!" + user.getUsername() + "@" + _server->getName()
+			+ " QUIT " + ":Quit :" + cmd.getTail() + "\r\n";
 		(*it)->broadcastAll(_server, msg);
 		(*it)->removeUser(&user);
 

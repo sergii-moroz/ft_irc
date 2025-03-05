@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/02 11:49:02 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 20:31:52 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -23,8 +23,8 @@
 # include <poll.h>
 # include <string>
 # include <vector>
+# include <ctime>
 # include <map>
-#include <cstring>
 
 # include "User.hpp"
 # include "Lexer.hpp"
@@ -76,6 +76,7 @@ class Server
 		void		processData(int sd);
 		void		closeAllSockets(void);
 		void		addNewUser(int sd);
+		std::string	getTimestamp();
 
 		int							_listen_sd;
 		int							_timeout;
@@ -85,7 +86,7 @@ class Server
 		std::vector<struct pollfd>	_fds;
 		static bool					_forever;
 		std::string					_name;
-		std::map<std::string, Channel *>	_channels;
+		std::map<std::string, Channel>	_channels;
 };
 
 #endif

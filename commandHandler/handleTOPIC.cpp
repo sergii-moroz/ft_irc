@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 22:39:34 by smoreron          #+#    #+#             */
-/*   Updated: 2025/02/28 22:06:51 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 20:14:16 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -21,7 +21,8 @@ void CommandHandler::handleTOPIC(int sd, Command const & cmd)
 	if (!user.getStatus(REGISTERED))
 	{
 		std::cerr << "ERROR: " << nickname << " [" << sd << "] Command \"" << cmd.getName() << "\" available only for registered users." << std::endl;
-		// optional send error here
+		std::string	msg = errNotRegistered(_server->getName(), nickname);
+		_server->sendData(sd, msg);
 		return;
 	}
 
@@ -38,7 +39,7 @@ void CommandHandler::handleTOPIC(int sd, Command const & cmd)
 
 	if (!channel)
 	{
-		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NOSUCHCHANNEL (403) - " << cmd.getName() << std::endl;
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NOSUCHCHANNEL (403) - " << cmd.getName() << " " << channelName << std::endl;
 		std::string	errMsg = errNoSuchChannel(_server->getName(), nickname, channelName);
 		_server->sendData(sd, errMsg);
 		return;
@@ -46,7 +47,7 @@ void CommandHandler::handleTOPIC(int sd, Command const & cmd)
 
 	if (!channel->isUser(&user))
 	{
-		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NOTONCHANNEL (442) - " << cmd.getName() << std::endl;
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NOTONCHANNEL (442) - " << cmd.getName() << " " << channelName << std::endl;
 		std::string	errMsg = errNotOnChannel(_server->getName(), nickname, channelName);
 		_server->sendData(sd, errMsg);
 		return;
@@ -62,6 +63,7 @@ void CommandHandler::handleTOPIC(int sd, Command const & cmd)
 
 		if (channel->getMode(TOPIC_MODE) && !channel->isOperator(&user))
 		{
+			std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_CHANOPRIVSNEEDED (482) - " << cmd.getName() << " " << channelName << std::endl;
 			std::string errMsg = errChanOpPrivsNeeded(_server->getName(), nickname, channelName);
 			_server->sendData(sd, errMsg);
 			return;
@@ -69,8 +71,7 @@ void CommandHandler::handleTOPIC(int sd, Command const & cmd)
 
 		std::cout << "INFO: " << nickname << " [" << sd << "] set \"" << newTopic << "\" as new topic for " << channelName << std::endl;
 		channel->setTopic(newTopic);
-		msg = ":" + nickname + "!" + user.getUsername()
-			+ "@" + _server->getName()
+		msg = ":" + nickname + "!" + user.getUsername() + "@" + _server->getName()
 			+  " TOPIC " + channelName + " :" + newTopic + "\r\n";
 		channel->broadcastAll(_server, msg);
 	}

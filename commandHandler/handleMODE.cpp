@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 20:02:40 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/03 10:47:49 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/04 20:12:46 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -21,11 +21,14 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 	if (!user.getStatus(REGISTERED))
 	{
 		std::cerr << "ERROR: " << nickname << " [" << sd << "] Command \"" << cmd.getName() << "\" available only for registered users." << std::endl;
-		// optional send error here
+		std::string	msg = errNotRegistered(_server->getName(), nickname);
+		_server->sendData(sd, msg);
 		return;
 	}
 
-	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0)) {
+	if (cmd.isParamEmpty() || !cmd.hasParamAtPos(0, 0))
+	{
+		std::cerr << "ERROR: " <<  nickname << " [" << sd << "] ERR_NEEDMOREPARAMS (461) - " << cmd.getName() << std::endl;
 		std::string msg = errNeedMoreParams(_server->getName(), cmd.getName());
 		_server->sendData(sd, msg);
 		return;
@@ -40,7 +43,7 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 
 		if (!channel)
 		{
-			std::cout << "ERROR: " << nickname << " [" << sd << "] ERR_NOSUCHCHANNEL (403)" << std::endl;
+			std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_NOSUCHCHANNEL (403) - MODE " << target << std::endl;
 			std::string	msg = errNoSuchChannel(_server->getName(), nickname, target);
 			_server->sendData(sd, msg);
 			return;
@@ -51,6 +54,7 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 			// Setter (Only Operator area)
 			if (!channel->isOperator(&user))
 			{
+				std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_CHANOPRIVSNEEDED (482) - MODE " << target << std::endl;
 				std::string msg = errChanOpPrivsNeeded(_server->getName(), nickname, target);
 				_server->sendData(sd, msg);
 				return;
@@ -142,8 +146,9 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 				}
 			}
 
-			std::string broadcastMsg = ":" + nickname + "!" + user.getUsername()
-				+ "@" + _server->getName()
+			std::cout << "INFO: " << nickname << " [" << sd << "] set mode \"" << modes << "\" for " << target << std::endl;
+			std::cout << "INFO: " << target << " current modes \"" << channel->getModeList() << "\"" << std::endl;
+			std::string broadcastMsg = ":" + nickname + "!" + user.getUsername() + "@" + _server->getName()
 				+ " MODE " + target + " " + modes + "\r\n";
 			channel->broadcastAll(_server, broadcastMsg);
 		}
@@ -155,7 +160,7 @@ void CommandHandler::handleMODE(int sd, Command const & cmd)
 		}
 
 		// DEBUG
-		std::cout << *channel << std::endl;
+		// std::cout << *channel << std::endl;
 	}
 	else
 	{

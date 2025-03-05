@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 10:25:00 by smoroz            #+#    #+#             */
-/*   Updated: 2025/02/28 20:39:34 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/05 07:59:05 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -21,14 +21,15 @@ void	CommandHandler::handleUSER(int sd, const Command &cmd)
 	if (!user.getStatus(PASSWORD))
 	{
 		std::cerr << "ERROR: " << nickname << " [" << sd << "] MUST send a PASS command before sending the NICK / USER combination." << std::endl;
-		// optional send error here
+		std::string	msg = errNotRegistered(_server->getName(), nickname);
+		_server->sendData(sd, msg);
 		return;
 	}
 
 	// Guard Registered
 	if (user.getStatus(REGISTERED))
 	{
-		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_ALREADYREGISTERED (462)" << std::endl;
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_ALREADYREGISTERED (462) - " << cmd.getName() << std::endl;
 		std::string	msg = errAlreadyRegistered(_server->getName(), nickname);
 		_server->sendData(sd, msg);
 		return ;
@@ -59,6 +60,6 @@ void	CommandHandler::handleUSER(int sd, const Command &cmd)
 		}
 
 		std::cout << "INFO: " << nickname << "!" << username << "@" << _server->getName() << " [" << sd << "] registered with realname: "  << realname << std::endl;
-		std::cout << "INFO: " << user << std::endl; // <-- Debug
+		// std::cout << "INFO: " << user << std::endl; // <-- Debug
 	}
 }

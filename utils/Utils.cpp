@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 15:00:16 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 15:34:20 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/05 10:11:09 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -121,7 +121,7 @@ int	Utils::validatePort(char const *arg)
 std::string	Utils::validatePass(char const *arg)
 {
 	std::string	pass(arg);
-	std::cout << "\"" << pass << "\"" << std::endl;
+	// std::cout << "\"" << pass << "\"" << std::endl;
 
 	if (pass.empty())
 	{
@@ -169,7 +169,8 @@ std::string	Utils::validateUsername(std::string const & username, size_t length)
 
 bool	Utils::isValidNickname(std::string const & nickname, size_t length)
 {
-	static std::string	symbols = "0123456789#: ";
+	static std::string	symbols = "$#: ,.*?!@";
+	// static	std::string	startSymbols = "$:# ";
 
 	if (nickname.empty())
 		return (false);
@@ -178,9 +179,40 @@ bool	Utils::isValidNickname(std::string const & nickname, size_t length)
 	if (slen < 3 || slen > length)
 		return (false);
 
-	size_t		pos = symbols.find(nickname[0]);
-	if (pos != std::string::npos)
+	size_t		pos; // = startSymbols.find(nickname[0]);
+	// if (pos != std::string::npos)
+	// 	return (false);
+
+	for (size_t i=0; i<nickname.length(); ++i)
+	{
+		if ((pos = symbols.find(nickname[i])) != std::string::npos)
+			return (false);
+	}
+
+	return (true);
+}
+
+bool	Utils::isValidChannelname(std::string const & name, size_t length)
+{
+	static std::string	symbols = " ,: ";
+	symbols[3] = 0x07;
+
+	if (name.empty())
 		return (false);
+
+	size_t	slen = name.length();
+	if (slen < 3 || slen > length)
+		return (false);
+
+	if (name[0] != '#')
+		return (false);
+
+	size_t		pos;
+	for (size_t i=0; i < name.length(); ++i)
+	{
+		if ((pos = symbols.find(name[i])) != std::string::npos)
+			return (false);
+	}
 
 	return (true);
 }
