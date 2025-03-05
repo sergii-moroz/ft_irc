@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:19:48 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 15:50:29 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/05 10:27:51 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -84,6 +84,7 @@ class CommandHandler
 		std::string	errChannelIsFull(std::string const &, std::string const &, std::string const &) const;				// 471
 		std::string	errInviteOnlyChan(std::string const &, std::string const &, std::string const &) const;				// 473
 		std::string	errBadChannelKey(std::string const &, std::string const &, std::string const &) const;				// 475
+		std::string	errBadChannelName(std::string const &, std::string const &, std::string const &) const;				// 479
 		std::string	errChanOpPrivsNeeded(std::string const &, std::string const &, std::string const &) const;			// 482
 		std::string	errUModeUnknownFlag(std::string const & serverName, std::string const & client);					// 501
 };

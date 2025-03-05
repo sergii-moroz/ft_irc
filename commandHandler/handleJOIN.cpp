@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 14:10:01 by smoreron          #+#    #+#             */
-/*   Updated: 2025/03/04 11:28:49 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/05 10:29:15 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -51,6 +51,15 @@ void	CommandHandler::joinChannel(std::string const & channelName, std::string co
 {
 	std::string	nickname = user.getNickname();
 	int	sd = user.getFd();
+
+	// check channelName is valid
+	if (!Utils::isValidChannelname(channelName, USERLEN))
+	{
+		std::cerr << "ERROR: " << nickname << " [" << sd << "] ERR_BADCHANNAME (479) - JOIN " << channelName << std::endl;
+		std::string	msg = errBadChannelName(_server->getName(), nickname, channelName);
+		_server->sendData(sd, msg);
+		return ;
+	}
 
 	Channel *channel = _server->getChannelByName(channelName);
 

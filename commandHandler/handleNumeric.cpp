@@ -6,7 +6,7 @@
 /*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 12:56:32 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 15:03:43 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/05 10:27:07 by smoroz           ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -219,6 +219,15 @@ std::string	CommandHandler::errInviteOnlyChan(std::string const & serverName, st
 std::string	CommandHandler::errBadChannelKey(std::string const & serverName, std::string const & client, std::string const & channel) const
 {
 	return (":" + serverName + " 475 " + client + " " + channel + " :Cannot join channel (+k)\r\n");
+}
+
+// ==========================================
+// ERR_BADCHANNAME (479)
+// ==========================================
+
+std::string	CommandHandler::errBadChannelName(std::string const & serverName, std::string const & client, std::string const & nick) const
+{
+	return (":" + serverName + " 479 " + client + " " + nick + " :Illegal channel name\r\n");
 }
 
 // ==========================================
