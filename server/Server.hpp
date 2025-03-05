@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smoroz <smoroz@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: smoreron <smoreron@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:01:02 by smoroz            #+#    #+#             */
-/*   Updated: 2025/03/04 20:31:52 by smoroz           ###   ########.fr       */
+/*   Updated: 2025/03/05 13:44:36 by smoreron         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -25,6 +25,7 @@
 # include <vector>
 # include <ctime>
 # include <map>
+#include <cstring>
 
 # include "User.hpp"
 # include "Lexer.hpp"
